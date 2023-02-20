@@ -8,10 +8,89 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use DB;
+use DB,DataTables;
 
 class MaintenanceScheduleController extends Controller
 {
+    public function index()
+    {
+        return view('layouts.administrator.maintenance-schedule.index');
+
+    }
+
+    public function data()
+    {
+        $datas = MaintenanceSchedule::orderBy("start_date_time","asc");
+
+        return DataTables::of($datas)
+        // ->editColumn('name', function ($umkmProduct) {
+        //     return '<a href="' .
+        //         ($umkmProduct->url_image != null ? $umkmProduct->url_image :  "/storage/image/static/empty.png") .
+        //         '" target="_blank"><img alt="image" class="table-avatar align-middle rounded" width="30px" height="30px" src="' .
+        //         ($umkmProduct->url_image != null ? $umkmProduct->url_image :  "/storage/image/static/empty.png") .
+        //         '"></a>' .
+        //         ' ' .
+        //         $umkmProduct->name;
+        // })
+        ->editColumn('action', function ($maintenanceSchedule) {
+            $show =
+                '<a href="' .
+                route('administrator.maintenance-schedule.show', $maintenanceSchedule->id) .
+                '" class="btn btn-info btn-flat btn-xs" title="Show"><i class="fa fa-eye fa-sm"></i></a>';
+            $edit =
+                '<a href="' .
+                route('administrator.maintenance-schedule.edit', $maintenanceSchedule->id) .
+                '" class="btn btn-warning btn-flat btn-xs" title="Edit"><i class="fa fa-pencil-alt fa-sm"></i></a>';
+
+            $delete =
+                '<a href="#" data-href="'.
+                route('administrator.maintenance-schedule.destroy', $maintenanceSchedule->id) .
+                '" class="btn btn-danger btn-flat btn-xs"
+                title="Delete" data-toggle="modal"
+                data-text="Apakah anda yakin untuk menghapus umkm '.$maintenanceSchedule->name.'"
+                data-target="#modal-confirmation-delete" data-value="'.$maintenanceSchedule->id.'">
+                <i class="fa fa-trash"></i>
+                </a>';
+            return $show.$edit.$delete;
+        })
+        ->rawColumns(['name','action'])
+        ->make(true);
+    }
+
+    public function create()
+    {
+        $data = new MaintenanceSchedule();
+        $title = "Buat Jadwal Maintenance";
+        $action = "create";
+        return view('layouts.administrator.maintenance-schedule.create', compact('title','data','action'));
+
+    }
+
+    public function store(Request $request)
+    {
+
+    }
+
+    public function show($id)
+    {
+
+    }
+
+    public function edit($id)
+    {
+
+    }
+
+    public function update(Request $request, $id)
+    {
+
+    }
+
+    public function destroy($id)
+    {
+
+    }
+
     public function testCreateEvent(Request $request)
     {
 

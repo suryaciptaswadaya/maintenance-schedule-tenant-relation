@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('maintenance_schedule_attendees', function (Blueprint $table) {
+        Schema::create('maintenance_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('maintenance_schedule_id');
-            $table->string('tenant_access_company_id');
-            $table->string('email');
-            $table->string('is_required')->default('required');
+            $table->string('name');
+            $table->text('template_email');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('maintenance_schedule_attendees');
+        Schema::dropIfExists('maintenance_categories');
     }
 };
