@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('maintenance_schedules', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('maintenace_category_id');
+            $table->unsignedBigInteger('maintenance_category_id');
             $table->string('subject');
             $table->text('content');
             $table->dateTime('start_date_time');
@@ -23,12 +23,14 @@ return new class extends Migration
             //$table->string('location');
             $table->boolean('is_online_meeting')->default(0);
             $table->boolean('is_required')->default(0);
+            $table->dateTime('7days_before_date_time');
+            $table->dateTime('1day_before_date_time');
             $table->boolean('is_execute_reminder_7days_before')->default(0);
             $table->boolean('is_execute_reminder_1day_before')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('maintenace_category_id')->references('id')->on('maintenance_categories')->onDelete('cascade');
+            $table->foreign('maintenance_category_id')->references('id')->on('maintenance_categories')->onDelete('cascade');
 
         });
     }
@@ -40,7 +42,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropForeign(['maintenace_category_id']);
+        Schema::table('maintenance_schedules', function (Blueprint $table) {
+            $table->dropForeign(['maintenance_category_id']);
+        });
         Schema::dropIfExists('maintenance_schedules');
     }
 };

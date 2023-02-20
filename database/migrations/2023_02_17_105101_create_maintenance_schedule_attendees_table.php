@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->char('maintenance_schedule_id',36);
             $table->char('maintenance_company_id',36);
-            $table->text('email_sent');
+            $table->text('template_email_sent');
+            //$table->boolean('is_sent')->default(0);
             $table->timestamps();
 
             $table->foreign('maintenance_schedule_id')->references('id')->on('maintenance_schedules')->onDelete('cascade');

@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('maintenance_categories', function (Blueprint $table) {
+        Schema::create('maintenance_template_emails', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('template_email');
+            $table->string('content');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('maintenance_categories');
+        Schema::dropIfExists('maintenance_template_emails');
     }
 };

@@ -23,8 +23,7 @@ return new class extends Migration
             $table->string('operational_condition'); // maintain master data?
             $table->char('phase',5);
             $table->string('property'); // maintain master data?
-            $table->json('hrga_name');
-            $table->json('hrga_email');
+            $table->json('hrga_information');
             $table->string('substasion'); // gardu induk // maintain master data?
             $table->char('trafo',5);
             $table->string('gas_provider'); // maintain master data?
