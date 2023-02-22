@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('maintenance_company_water_meters', function (Blueprint $table) {
+        Schema::create('scs_categories', function (Blueprint $table) {
             $table->id();
-            $table->char('maintenance_company_id',36);
             $table->string('name');
             $table->timestamps();
-
-            $table->foreign('maintenance_company_id')->references('id')->on('maintenance_companies')->onDelete('cascade');
         });
     }
 
@@ -30,9 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('maintenance_company_water_meters', function (Blueprint $table) {
-            $table->dropForeign(['maintenance_company_id']);
-        });
-        Schema::dropIfExists('maintenance_company_water_meters');
+        Schema::dropIfExists('scs_categories');
     }
 };

@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'Maintenance Scheduler',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo' => '&nbsp;',
+    'logo_img' => 'https://suryacipta.com/wp-content/uploads/2021/09/homepage-dan-other-pages-op.png',
+    'logo_img_class' => 'brand-image img-circle',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'Suryacipta',
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +107,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
             'alt' => 'AdminLTE Preloader Image',
@@ -186,15 +186,15 @@ return [
     |
     */
 
-    'classes_body' => '',
+    'classes_body' => 'accent-olive',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_sidebar' => 'sidebar-light-warning elevation-4',
+    'classes_sidebar_nav' => 'nav-flat nav-compact',
+    'classes_topnav' => 'navbar-olive navbar-dark',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -294,18 +294,18 @@ return [
         [
             'type'         => 'navbar-search',
             'text'         => 'search',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
         [
             'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
 
         // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
+        // [
+        //     'type' => 'sidebar-menu-search',
+        //     'text' => 'search',
+        // ],
         [
             'text' => 'Dashboard',
             'icon'    => 'far fas fa-tachometer-alt',
@@ -316,7 +316,7 @@ return [
             'text' => 'Jadwal Maintenance',
             'icon'    => 'far fa-fw fa-calendar-alt',
             'url'  => 'administrator/maintenance-schedule',
-            'active' => ['administrator/maintenace-schedule*']
+            'active' => ['administrator/maintenance-schedule*']
         ]
     ],
 

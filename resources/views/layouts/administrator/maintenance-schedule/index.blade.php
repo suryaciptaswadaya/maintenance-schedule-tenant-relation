@@ -20,14 +20,14 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-info card-outline">
+        <div class="card card-olive card-outline">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <h3 class="card-title mt-1">
                         <i class="fa fa-calendar-alt"></i>
                         &nbsp; Jadwal Maintenance
                     </h3>
-                    <a href="{{ route('administrator.maintenance-schedule.create') }}" class="btn btn-primary btn-flat btn-sm"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ "Buat Jadwal Maintenenace" }}</a>
+                    <a href="{{ route('administrator.maintenance-schedule.create') }}" class="btn bg-olive btn-flat btn-sm"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ "Buat Jadwal Maintenenace" }}</a>
                 </div>
             </div>
             <div class="card-body">

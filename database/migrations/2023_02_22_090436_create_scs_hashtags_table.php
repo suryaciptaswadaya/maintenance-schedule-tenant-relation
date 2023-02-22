@@ -13,10 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('maintenance_categories', function (Blueprint $table) {
-            $table->id();
+        Schema::create('scs_hashtags', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('scs_hashtag_category_id')->index();
             $table->string('name');
             $table->timestamps();
+            $table->foreign('scs_hashtag_category_id')->references('id')->on('scs_hashtag_categories')->onDelete('cascade');
+
         });
     }
 
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('maintenance_categories');
+        Schema::dropIfExists('scs_hashtags');
     }
 };

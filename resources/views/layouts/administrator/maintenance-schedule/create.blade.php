@@ -44,6 +44,56 @@
 
     $(document).ready(function() {
 
+        $(".select2-js").select2({
+            placeholder: 'Pilih Perusahaan',
+            minimumInputLength: 2,
+            //theme: 'bootstrap4',
+            // ajax: {
+            //     url : "#",
+            //     method : "POST",
+            //     dataType : 'json',
+            //     delay: 1000,
+            //     data: function(params) {
+            //         var query = {
+            //             search: params.term,
+            //             page: params.page || 1
+            //         }
+            //         // Query parameters will be ?search=[term]&page=[page]
+            //         return query;
+            //     },
+            //     processResults: function (response) {
+            //         return {
+            //             results: response
+            //         };
+            //     }
+            // }
+        });
+
+        $(".select2-js-test").select2({
+            placeholder: 'Pilih Kategori',
+            minimumInputLength: 2,
+            //theme: 'bootstrap4',
+            // ajax: {
+            //     url : "#",
+            //     method : "POST",
+            //     dataType : 'json',
+            //     delay: 1000,
+            //     data: function(params) {
+            //         var query = {
+            //             search: params.term,
+            //             page: params.page || 1
+            //         }
+            //         // Query parameters will be ?search=[term]&page=[page]
+            //         return query;
+            //     },
+            //     processResults: function (response) {
+            //         return {
+            //             results: response
+            //         };
+            //     }
+            // }
+        });
+
         tinymce.init({
             selector: 'textarea#tinymce-editor',
             //height: 500,

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MaintenanceCompany extends Model
+class ScsMailAttendee extends Model
 {
     use HasFactory;
 }

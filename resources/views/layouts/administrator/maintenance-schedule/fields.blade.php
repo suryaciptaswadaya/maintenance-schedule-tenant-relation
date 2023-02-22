@@ -1,5 +1,5 @@
 <div class="">
-    <div class="card card-info card-outline">
+    <div class="card card-olive card-outline">
         <div class="card-header">
             <div class="d-flex">
                 <div class="mr-auto">
@@ -37,7 +37,7 @@
             </div>
             @endif
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-5">
                     <label>Waktu Maintenance</label>
                     <div class="input-group" >
                         <input type="text" name="start_date_time" @if ($action ===  "show") disabled @endif class="form-control text-right daterange-single @error('start_date_time') is-invalid @enderror" placeholder="{{ now()->format('d-m-Y H:i') }}" value="{{ old('start_date_time', $data->start_date_time) }}" required>
@@ -48,11 +48,30 @@
                     </div>
                 </div>
 
+                <div class="col-sm-3">
+                    <!-- text input -->
+                    <div class="form-group">
+                        <label> {{ __('Kategori') }} </label>
+                        <select id="" class="form-control select2 select2-js-test" style="width: 100%;" name="umkm_id">
+                            <option></option>
+                            <option value="Kategori 1">Kategori 1</option>
+                            <option value="Kategori 2">Kategori 2</option>
+                            <option value="Kategori 3">Kategori 3</option>
+                            <option value="Kategori 4">Kategori 4</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="col-sm-4">
                     <!-- text input -->
                     <div class="form-group">
-                        <label> {{ __('Lokasi') }} </label>
-                        <input type="text" name="location" @if ($action ===  "show") disabled @endif class="form-control @error('location') is-invalid @enderror" placeholder="Lokasi ..." value="{{ old('location', $data->location) }}" required>
+                        <label> {{ __('Perusahaan') }} </label>
+                        <select id="" class="form-control select2 select2-js"  multiple="multiple" style="width: 100%;" name="umkm_id">
+                            <option value="Perusahaan 1">Perusahaan 1</option>
+                            <option value="Perusahaan 2">Perusahaan 2</option>
+                            <option value="Perusahaan 3">Perusahaan 3</option>
+                            <option value="Perusahaan 4">Perusahaan 4</option>
+                        </select>
                     </div>
                 </div>
 

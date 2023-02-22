@@ -13,11 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('maintenance_template_emails', function (Blueprint $table) {
+        Schema::create('scs_mail_schedulers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('content');
+            $table->char('scs_mail_id',36)->index();
+            $table->dateTime('date_time');
+            $table->boolean('is_sent');
             $table->timestamps();
+
+            $table->foreign('scs_mail_id')->references('id')->on('scs_mails')->onDelete('cascade');
+
         });
     }
 
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('maintenance_template_emails');
+        Schema::dropIfExists('scs_mail_schedulers');
     }
 };
