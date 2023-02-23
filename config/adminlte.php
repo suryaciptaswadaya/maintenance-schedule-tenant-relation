@@ -313,10 +313,10 @@ return [
             'active' => ['/administrator/dashboard']
         ],
         [
-            'text' => 'Jadwal Maintenance',
+            'text' => 'Mail',
             'icon'    => 'far fa-fw fa-calendar-alt',
-            'url'  => 'administrator/maintenance-schedule',
-            'active' => ['administrator/maintenance-schedule*']
+            'url'  => 'administrator/sms-mail',
+            'active' => ['administrator/sms-mail*']
         ]
     ],
 
@@ -431,17 +431,32 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => 'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js',
+                    'location' => '//cdn.jsdelivr.net/momentjs/latest/moment.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js',
+                    'location' => '//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => false,
-                    'location' => 'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css',
+                    'location' => '//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css',
+                ],
+            ],
+        ],
+        'BsStepper' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css',
                 ],
             ],
         ],

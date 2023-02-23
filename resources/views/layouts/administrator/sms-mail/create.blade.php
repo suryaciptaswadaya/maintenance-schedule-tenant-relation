@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Jadwal Maintenance')
+@section('title', 'Mail')
 
 @section('content_header')
 
@@ -11,7 +11,7 @@
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Jadwal Maintenance</a></li>
+            <li class="breadcrumb-item"><a href="#">Mail</a></li>
             <li class="breadcrumb-item"><a href="#">{{ $title }}</a></li>
         </ol>
     </div>
@@ -20,9 +20,9 @@
 
 @section('content')
 <div class="row">
-    <form role="form" action="{{ route('administrator.maintenance-schedule.store') }}" method="POST" class="col-md-12" enctype="multipart/form-data">
+    <form role="form" action="{{ route('administrator.sms-mail.store') }}" method="POST" class="col-md-12" enctype="multipart/form-data">
         @csrf
-        @include("layouts.administrator.maintenance-schedule.fields")
+        @include("layouts.administrator.sms-mail.fields")
     </form>
 </div>
 @stop
@@ -32,9 +32,15 @@
 @stop
 @section('plugins.Select2', true)
 @section('plugins.Moment', true)
+@section('plugins.BsStepper', true)
 @push('js')
 <script src="https://cdn.tiny.cloud/1/88sysgy3de5twnl1vna0apf5dkw6ukgpi3c3bnsmj3fjqrz3/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script type="text/javascript">
+
+// BS-Stepper Init
+    document.addEventListener('DOMContentLoaded', function () {
+        window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+    })
 
     $.ajaxSetup({
         headers: {
@@ -43,6 +49,7 @@
     });
 
     $(document).ready(function() {
+        //var stepper = new Stepper($('.bs-stepper')[0])
 
         $(".select2-js").select2({
             placeholder: 'Pilih Perusahaan',

@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', 'Jadwal Maintenance')
+@section('title', 'Mail')
 
 @section('content_header')
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Jadwal Maintenance</h1>
+        <h1 class="m-0 text-dark">Mail</h1>
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Jadwal Maintenance</a></li>
+            <li class="breadcrumb-item"><a href="#">Mail</a></li>
         </ol>
     </div>
 </div>
@@ -27,7 +27,7 @@
                         <i class="fa fa-calendar-alt"></i>
                         &nbsp; Jadwal Maintenance
                     </h3>
-                    <a href="{{ route('administrator.maintenance-schedule.create') }}" class="btn bg-olive btn-flat btn-sm"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ "Buat Jadwal Maintenenace" }}</a>
+                    <a href="{{ route('administrator.sms-mail.create') }}" class="btn bg-olive btn-flat btn-sm"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ "Buat Mail" }}</a>
                 </div>
             </div>
             <div class="card-body">
@@ -73,7 +73,7 @@
                 },
                 ajax: {
                     method: 'POST',
-                    url: "{{ route('administrator.maintenance-schedule.data') }}",
+                    url: "{{ route('administrator.sms-mail.data') }}",
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 },
                 columns: [

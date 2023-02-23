@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MaintenanceScheduleController;
+use App\Http\Controllers\SmsMailController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,15 +31,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
         // ini nanti aksesnya jadi contoh.com/administrator/maintenance-schedule
-        Route::prefix('/maintenance-schedule')->as('maintenance-schedule.')->group(function() {
-        Route::get('', [MaintenanceScheduleController::class,'index'])->name('index');
-            Route::get('create', [MaintenanceScheduleController::class,'create'])->name('create');
-            Route::post('', [MaintenanceScheduleController::class,'store'])->name('store');
-            Route::post('data', [MaintenanceScheduleController::class,'data'])->name('data');
-            Route::get('{id}', [MaintenanceScheduleController::class,'show'])->name('show');
-            Route::get('{id}/edit', [MaintenanceScheduleController::class,'edit'])->name('edit');
-            Route::put('{id}', [MaintenanceScheduleController::class,'update'])->name('update');
-            Route::delete('{id}', [MaintenanceScheduleController::class,'destroy'])->name('destroy');
+        Route::prefix('/sms-mail')->as('sms-mail.')->group(function() {
+        Route::get('', [SmsMailController::class,'index'])->name('index');
+            Route::get('create', [SmsMailController::class,'create'])->name('create');
+            Route::post('', [SmsMailController::class,'store'])->name('store');
+            Route::post('data', [SmsMailController::class,'data'])->name('data');
+            Route::get('{id}', [SmsMailController::class,'show'])->name('show');
+            Route::get('{id}/edit', [SmsMailController::class,'edit'])->name('edit');
+            Route::put('{id}', [SmsMailController::class,'update'])->name('update');
+            Route::delete('{id}', [SmsMailController::class,'destroy'])->name('destroy');
         });
     });
 });
