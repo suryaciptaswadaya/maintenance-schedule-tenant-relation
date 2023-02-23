@@ -13,10 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scs_hashtag_categories', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('name');
+        Schema::create('sms_mail_schedulers', function (Blueprint $table) {
+            $table->id();
+            $table->char('sms_mail_id',36)->index();
+            $table->dateTime('send_date');
+            $table->boolean('is_execute')->default(0);
             $table->timestamps();
+
+            $table->foreign('sms_mail_id')->references('id')->on('sms_mails')->onDelete('cascade');
+
         });
     }
 
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scs_hashtag_categories');
+        Schema::dropIfExists('sms_mail_schedulers');
     }
 };

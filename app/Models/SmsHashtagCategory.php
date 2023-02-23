@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ScsTemplateEmail extends Model
+class SmsHashtagCategory extends Model
 {
     use HasFactory;
 }

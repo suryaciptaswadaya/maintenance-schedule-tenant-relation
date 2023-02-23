@@ -13,16 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scs_mails', function (Blueprint $table) {
+        Schema::create('sms_tenants', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('scs_category_id')->index();
-            $table->string('subject');
-            $table->boolean('is_online_meeting')->default(0);
-            $table->boolean('is_required')->default(0);
-            $table->timestamps();
+            $table->string('tenant_access_company_id')->index();
+            $table->string('name');
             $table->softDeletes();
-
-            $table->foreign('scs_category_id')->references('id')->on('scs_categories')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scs_mails');
+        Schema::dropIfExists('sms_tenants');
     }
 };

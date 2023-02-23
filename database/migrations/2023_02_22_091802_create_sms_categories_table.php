@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scs_template_emails', function (Blueprint $table) {
+        Schema::create('sms_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('content');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scs_template_emails');
+        Schema::dropIfExists('sms_categories');
     }
 };

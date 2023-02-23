@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scs_tenants', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('tenant_access_company_id')->index();
+        Schema::create('sms_hashtags', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->string('sms_hashtag_category_id')->index();
             $table->string('name');
-            $table->softDeletes();
             $table->timestamps();
+            $table->foreign('sms_hashtag_category_id')->references('id')->on('sms_hashtag_categories')->onDelete('cascade');
+
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scs_tenants');
+        Schema::dropIfExists('sms_hashtags');
     }
 };

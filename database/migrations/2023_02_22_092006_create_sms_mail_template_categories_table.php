@@ -13,15 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scs_category_template_emails', function (Blueprint $table) {
-            // $table->foreignId('scs_category_id')->constrained()->onDelete('cascade');
-            // $table->foreignId('scs_template_email_id')->constrained()->onDelete('cascade');
-            // $table->primary(['scs_category_id', 'scs_template_email_id']);
+        Schema::create('sms_mail_template_categories', function (Blueprint $table) {
+            // $table->foreignId('sms_category_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('sms_mail_template_id')->constrained()->onDelete('cascade');
+            // $table->primary(['sms_category_id', 'sms_mail_template_id']);
 
-            $table->unsignedBigInteger('scs_category_id')->index();
-            $table->unsignedBigInteger('scs_template_email_id')->index();
-            $table->foreign('scs_category_id')->references('id')->on('scs_categories')->onDelete('cascade');
-            $table->foreign('scs_template_email_id')->references('id')->on('scs_template_emails')->onDelete('cascade');
+            $table->id();
+            $table->unsignedBigInteger('sms_category_id')->index();
+            $table->unsignedBigInteger('sms_mail_template_id')->index();
+            $table->foreign('sms_category_id')->references('id')->on('sms_categories')->onDelete('cascade');
+            $table->foreign('sms_mail_template_id')->references('id')->on('sms_mail_templates')->onDelete('cascade');
 
             // $table->unsignedBigInteger('category_id');
             // $table->unsignedBigInteger('template_email_id');
@@ -39,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scs_category_template_emails');
+        Schema::dropIfExists('sms_mail_template_categories');
     }
 };

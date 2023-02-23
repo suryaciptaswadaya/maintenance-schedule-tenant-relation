@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scs_categories', function (Blueprint $table) {
-            $table->id();
+        Schema::create('sms_hashtag_categories', function (Blueprint $table) {
+            $table->string('id')->primary();
             $table->string('name');
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scs_categories');
+        Schema::dropIfExists('sms_hashtag_categories');
     }
 };
