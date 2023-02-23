@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->char('sms_mail_id',36);
             $table->string('field');
-            $table->json('value');
+            $table->text('value');
             $table->timestamps();
 
             $table->foreign('sms_mail_id')->references('id')->on('sms_mails')->onDelete('cascade');

@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sms_template_emails');
+        Schema::dropIfExists('sms_mail_templates');
     }
 };

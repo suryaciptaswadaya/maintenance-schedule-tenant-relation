@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sms_tenants', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('tenant_access_company_id')->index();
+            $table->string('id')->primary();
+            $table->string('tenant_access_company_id')->index()->nullable();
             $table->string('name');
             $table->softDeletes();
             $table->timestamps();

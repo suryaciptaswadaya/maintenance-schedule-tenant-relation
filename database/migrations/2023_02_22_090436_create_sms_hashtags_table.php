@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sms_hashtags', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('sms_hashtag_category_id')->index();
-            $table->string('name');
+            $table->text('name');
             $table->timestamps();
             $table->foreign('sms_hashtag_category_id')->references('id')->on('sms_hashtag_categories')->onDelete('cascade');
 
