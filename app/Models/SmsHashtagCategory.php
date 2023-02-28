@@ -11,4 +11,9 @@ class SmsHashtagCategory extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+
+    public function scopeWithoutHrgaInformation($query)
+    {
+        return $query->where('name','!=','hrga_information');
+    }
 }

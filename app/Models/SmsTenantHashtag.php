@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class SmsTenantHashtag extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = null;
+    protected $keyType = 'string';
+
 }

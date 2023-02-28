@@ -127,7 +127,163 @@
             }
         });
 
+
+
+
+        getHashTags();
+        getTenants();
+        searchCheckboxIds();
+        getHashTagsIds();
+        hashTagTrigger();
+
+        //getHashTags();
+
+
     });
+
+    function searchCheckboxIds(){
+        $('.hashtag-category').click(function(){
+            $(this).prop('checked')
+            let hashTagCategoryIds = getHashTagsCategoryIds();
+            getHashTags(hashTagCategoryIds);
+        });
+    }
+
+    function hashTagTrigger()
+    {
+       $('#hashtags').on('select2:select',function(){
+            let hashTagCategoryIds = getHashTagsCategoryIds();
+            let hashTagIds = getHashTagsIds();
+            console.log(hashTagCategoryIds,hashTagIds);
+            getTenants(hashTagCategoryIds,hashTagIds)
+        });
+    }
+
+    function getHashTags(hashTagCategory)
+    {
+        $("#hashtags").select2({
+            placeholder: 'Pilih Kategori',
+            minimumInputLength: 1,
+            closeOnSelect: false,
+            ajax: {
+                url : "{{ route('administrator.sms-hashtag.json') }}",
+                method : "POST",
+                dataType : 'json',
+                delay: 1000,
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        //page: params.page || 1,
+                        hash_tag_category: hashTagCategory
+                    }
+                    // Query parameters will be ?search=[term]&page=[page]
+                    return query;
+                },
+                processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                }
+            }
+        });
+    }
+
+    function getHashTagsCategoryIds()
+    {
+        let searchCategoryIds = $("input:checkbox:checked").map(function(){
+            return $(this).val();
+        }).toArray();
+
+        return searchCategoryIds;
+    }
+
+    function getHashTagsIds()
+    {
+        let hashTagIds = [];
+        $.each($('#hashtags').find(":selected"), function (i, item) {
+            // custom attribute hashTagIds.push($(item).data());
+            hashTagIds.push($(item).val());
+
+        });
+        return hashTagIds;
+    }
+
+    function getTenants(hashTagCategory = '', hashTag ='')
+    {
+        $("#tenants").select2({
+            placeholder: 'Pilih Tenants',
+            minimumInputLength: 1,
+            closeOnSelect: false,
+            ajax: {
+                url : "{{ route('administrator.sms-tenant.json') }}",
+                method : "POST",
+                dataType : 'json',
+                delay: 1000,
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        hash_tag_category: hashTagCategory,
+                        hash_tag: hashTag
+                    }
+                    // Query parameters will be ?search=[term]&page=[page]
+                    return query;
+                },
+                processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                }
+            }
+        });
+
+    }
+
+
+
+
+
+    //    $('.hashtag-category').on('change', function() {
+    //     var searchIDs = $('.hashtag-category').val($('input:checkbox:checked').map(function() {
+    //             return $(this).val();
+    //         }).toArray());
+
+
+    //     });
+        // var rfs = $(this).val();
+            // $.ajax({
+            //     url : "#",
+            //     method : "POST",
+            //     data : {date: rfs},
+            //     async : true,
+            //     dataType : 'json',
+            //     beforeSend: function () {
+            //         $("#modalLoading").modal('show');
+            //     },
+            //     success:function(data, text) {
+            //         vatMultiplier = parseFloat(data.vat.multiply_vat);
+            //         vatValue = parseFloat(data.vat.value);
+            //         $('#ppn-value').text(vatValue);
+            //         for (let index = 0; index < $('[name^="price_surcharge"]').length; index++) {
+            //             let val = $('#product-surcharge-' + index).val();
+            //             $('#product-surcharge-' + index).val(val).trigger("change");
+            //         }
+            //         for (let index = 0; index < $('[name^="price_sell"]').length; index++) {
+            //             let val = $('#product-sell-' + index).val();
+            //             $('#product-sell-' + index).val(val).trigger("change");
+            //         }
+            //         if ($('#package-service-plan').val().length != 0){
+            //             $('#package-service-plan').change();
+            //         }
+            //     },
+            //     error: function(request, status, error){
+            //         var regex = /(?<=\[).+?(?=\])/g;
+            //         toastr.error(request.responseJSON?.errors ? regex.exec(JSON.stringify(request.responseJSON?.errors)) : request.responseJSON?.message, error);
+            //     },
+            //     complete: function(data) {
+            //         $("#modalLoading").modal('hide');
+            //     },
+            // });
+        //});
 </script>
 
 @endpush

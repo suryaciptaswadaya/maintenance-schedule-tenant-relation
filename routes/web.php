@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\SmsHashTagController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SmsMailController;
+use App\Http\Controllers\SmsTenantController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         // ini nanti aksesnya jadi contoh.com/administrator/maintenance-schedule
         Route::prefix('/sms-mail')->as('sms-mail.')->group(function() {
-        Route::get('', [SmsMailController::class,'index'])->name('index');
+            Route::get('', [SmsMailController::class,'index'])->name('index');
             Route::get('create', [SmsMailController::class,'create'])->name('create');
             Route::post('', [SmsMailController::class,'store'])->name('store');
             Route::post('data', [SmsMailController::class,'data'])->name('data');
@@ -41,5 +44,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::put('{id}', [SmsMailController::class,'update'])->name('update');
             Route::delete('{id}', [SmsMailController::class,'destroy'])->name('destroy');
         });
+
+        Route::prefix('/sms-hashtag')->as('sms-hashtag.')->group(function() {
+            Route::post('json', [SmsHashTagController::class,'json'])->name('json');
+        });
+
+        Route::prefix('/sms-tenant')->as('sms-tenant.')->group(function() {
+            Route::post('json', [SmsTenantController::class,'json'])->name('json');
+
+        });
+
+
     });
 });

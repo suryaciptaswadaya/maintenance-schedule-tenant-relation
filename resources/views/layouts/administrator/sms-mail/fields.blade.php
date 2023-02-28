@@ -61,7 +61,7 @@
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input custom-control-input-danger" type="checkbox"
+                                        <input class="custom-control-input custom-control-input-danger hashtag-category" type="checkbox"
                                             id="{{ $hashtagCategory->name }}" value="{{ $hashtagCategory->id }}">
                                         <label for="{{ $hashtagCategory->name }}"
                                             class="custom-control-label">{{ str_replace('_', ' ', strtoupper($hashtagCategory->name)) }}</label>
@@ -71,16 +71,28 @@
                         @endforeach
                     </div>
 
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label> {{ __('Kategori') }} </label>
+                                <select id="hashtags" class="form-control select2" multiple="multiple" style="width: 100%;" name="hashtag[]">
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label> {{ __('Tenant') }} </label>
+                                <select id="tenants" class="form-control select2" multiple="multiple" style="width: 100%;" name="tenant[]">
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <button class="btn btn-primary" onclick="stepper.next()">Next</button>
-
                 </div>
 
                 <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">

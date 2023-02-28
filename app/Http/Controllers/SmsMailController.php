@@ -63,7 +63,7 @@ class SmsMailController extends Controller
         $data = new SmsMail();
         $title = "Buat Mail";
         $action = "create";
-        $hashtagCategories = SmsHashtagCategory::get();
+        $hashtagCategories = SmsHashtagCategory::withoutHrgaInformation()->get();
         return view('layouts.administrator.sms-mail.create', compact('title','data','action','hashtagCategories'));
 
     }
