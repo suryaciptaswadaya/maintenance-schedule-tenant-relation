@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\SmsHashTagController;
+use App\Http\Controllers\SmsMailCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SmsMailController;
+use App\Http\Controllers\SmsMailTemplateController;
 use App\Http\Controllers\SmsTenantController;
+use App\Models\SmsMailCategory;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,11 +50,21 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::prefix('/sms-hashtag')->as('sms-hashtag.')->group(function() {
             Route::post('json', [SmsHashTagController::class,'json'])->name('json');
+            Route::post('html', [SmsHashTagController::class,'html'])->name('html');
+
         });
 
         Route::prefix('/sms-tenant')->as('sms-tenant.')->group(function() {
             Route::post('json', [SmsTenantController::class,'json'])->name('json');
+            Route::post('html', [SmsTenantController::class,'html'])->name('html');
+        });
 
+        Route::prefix('/sms-mail-category')->as('sms-mail-category.')->group(function() {
+            Route::post('json', [SmsMailCategoryController::class,'json'])->name('json');
+        });
+
+        Route::prefix('/sms-mail-template')->as('sms-mail-template.')->group(function() {
+            Route::post('json', [SmsMailTemplateController::class,'json'])->name('json');
         });
 
 

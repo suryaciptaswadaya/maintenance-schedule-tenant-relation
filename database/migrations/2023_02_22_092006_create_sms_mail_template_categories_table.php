@@ -14,14 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sms_mail_template_categories', function (Blueprint $table) {
-            // $table->foreignId('sms_category_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('sms_mail_category_id')->constrained()->onDelete('cascade');
             // $table->foreignId('sms_mail_template_id')->constrained()->onDelete('cascade');
-            // $table->primary(['sms_category_id', 'sms_mail_template_id']);
+            // $table->primary(['sms_mail_category_id', 'sms_mail_template_id']);
 
             $table->id();
-            $table->unsignedBigInteger('sms_category_id')->index();
+            $table->unsignedBigInteger('sms_mail_category_id')->index();
             $table->unsignedBigInteger('sms_mail_template_id')->index();
-            $table->foreign('sms_category_id')->references('id')->on('sms_categories')->onDelete('cascade');
+            $table->foreign('sms_mail_category_id')->references('id')->on('sms_categories')->onDelete('cascade');
             $table->foreign('sms_mail_template_id')->references('id')->on('sms_mail_templates')->onDelete('cascade');
 
             // $table->unsignedBigInteger('category_id');

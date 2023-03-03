@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sms_mail_templates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('content');
+            $table->text('content');
             $table->timestamps();
         });
     }
