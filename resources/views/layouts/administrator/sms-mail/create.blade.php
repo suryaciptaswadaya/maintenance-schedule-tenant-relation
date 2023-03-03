@@ -81,7 +81,7 @@
                 (stepperPan.getAttribute('id') === 'tenant-part' && !checkedTenant )
             ) {
                 event.preventDefault()
-                sweetalert()
+                @include('layouts.include.sweetalert',['title' => 'Oops..', 'text'=>'Silahkan lengkapi data yang diinput', 'type'=>'error'])
                 //form.classList.add('was-validated')
 
             }
@@ -466,15 +466,7 @@
         template.after(clone);
     }
 
-    function sweetalert()
-    {
-        Swal.fire({
-            type: 'error',
-            title: 'Oops...',
-            text: 'Silahkan lengkapi data yang diinput',
-            timer: 1000
-        })
-    }
+
 
     // function getHashTagsIds()
     // {
