@@ -360,6 +360,8 @@
                 }
             }
         });
+
+
     }
 
     function categoryMailTrigger()
@@ -367,6 +369,7 @@
         $('#category-mail').on('select2:select',function(){
             let categoryId = getCategoryMailId();
             //console.log(categoryId);
+            $("#template-mail").empty().trigger('change');
             getMailTempalte(categoryId)
         });
     }
