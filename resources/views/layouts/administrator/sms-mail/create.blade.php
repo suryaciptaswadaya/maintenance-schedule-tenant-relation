@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layouts.master-adminlte')
 
 @section('title', 'Mail')
 
@@ -59,7 +59,12 @@
 
             var checkboxesTenant = document.querySelectorAll('.tenant');
 
+            var informationTemplate = document.querySelectorAll('.information-template');
+
             var checkedTenant = false;
+            var checkedInformation = false;
+
+
 
             for (var i = 0; i < checkboxesTenant.length; i++) {
                 if (checkboxesTenant[i].checked) {
@@ -68,18 +73,31 @@
                 }
             }
 
+            for (let i = 0; i < informationTemplate.length; i++) {
+                if (informationTemplate[i].value) {
+                    checkedInformation = true;
+                    break;
+                }
+            }
+
             //console.log(currentStep);
 
+
             if (currentStep > 0) {
-            currentStep--
+                currentStep--
             }
 
             var stepperPan = stepperPanList[currentStep];
 
+            //console.log(stepperPan.getAttribute('id'));
+
             if ((stepperPan.getAttribute('id') === 'category-part' && !inputCategoryMailForm.value.length || !inputTemplateMailForm.value.length)
                 ||
-                (stepperPan.getAttribute('id') === 'tenant-part' && !checkedTenant )
+                (stepperPan.getAttribute('id') === 'tenant-part' && !checkedTenant)
+                ||
+                (stepperPan.getAttribute('id') === 'information-part' && !checkedInformation)
             ) {
+
                 event.preventDefault()
                 @include('layouts.include.sweetalert',['title' => 'Oops..', 'text'=>'Silahkan lengkapi data yang diinput', 'type'=>'error'])
                 //form.classList.add('was-validated')
@@ -95,92 +113,15 @@
     });
 
     $(document).ready(function() {
-        //var stepper = new Stepper($('.bs-stepper')[0])
-
-        // $(".select2-js").select2({
-        //     placeholder: 'Pilih Perusahaan',
-        //     minimumInputLength: 2,
-        //     //theme: 'bootstrap4',
-        //     // ajax: {
-        //     //     url : "#",
-        //     //     method : "POST",
-        //     //     dataType : 'json',
-        //     //     delay: 1000,
-        //     //     data: function(params) {
-        //     //         var query = {
-        //     //             search: params.term,
-        //     //             page: params.page || 1
-        //     //         }
-        //     //         // Query parameters will be ?search=[term]&page=[page]
-        //     //         return query;
-        //     //     },
-        //     //     processResults: function (response) {
-        //     //         return {
-        //     //             results: response
-        //     //         };
-        //     //     }
-        //     // }
-        // });
-
-        // $(".select2-js-test").select2({
-        //     placeholder: 'Pilih Kategori',
-        //     minimumInputLength: 2,
-        //     //theme: 'bootstrap4',
-        //     // ajax: {
-        //     //     url : "#",
-        //     //     method : "POST",
-        //     //     dataType : 'json',
-        //     //     delay: 1000,
-        //     //     data: function(params) {
-        //     //         var query = {
-        //     //             search: params.term,
-        //     //             page: params.page || 1
-        //     //         }
-        //     //         // Query parameters will be ?search=[term]&page=[page]
-        //     //         return query;
-        //     //     },
-        //     //     processResults: function (response) {
-        //     //         return {
-        //     //             results: response
-        //     //         };
-        //     //     }
-        //     // }
-        // });
-
-        // tinymce.init({
-        //     selector: 'textarea#tinymce-editor',
-        //     //height: 500,
-        //     menubar: true,
-        //     plugins: [
-        //         'autolink lists link image charmap print preview anchor',
-        //         'searchreplace visualblocks code fullscreen',
-        //         'insertdatetime media table paste code help wordcount'
-        //     ],
-        //     toolbar: 'undo redo | formatselect | ' +
-        //     'bold italic backcolor | alignleft aligncenter ' +
-        //     'alignright alignjustify | bullist numlist outdent indent | ' +
-        //     'removeformat | help',
-        //     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-        // });
-
-        // $('.daterange-single').daterangepicker({
-        //     singleDatePicker: true,
-        //     autoApply: true,
-        //     timePicker:true,
-        //     timePicker24Hour:true,
-        //     locale: {
-        //         format: 'DD-MM-YYYY T HH:mm'
-        //     }
-        // });
-
-
-
 
         /*Begin - Kategori & Tempalte*/
         getCategory();
         categoryMailTrigger();
         getMailTempalte();
+        mailTemplateHashTagTrigger();
+
         /*End - Kategori & Tempalte*/
+
 
         /*Begin - Tenant*/
         propCheckAllHashTag();
@@ -225,7 +166,8 @@
                         $("#modalLoading").modal('show');
                     },
                     success: function(data){
-                        $(`#${idCheckbox}`).html(data.success);
+                        console.log(idCheckbox);
+                        $(`#${idCheckbox}`).html(data.response);
                     },complete: function(data) {
                         $("#modalLoading").modal('hide');
                     },
@@ -409,9 +351,44 @@
         });
     }
 
+    function mailTemplateHashTagTrigger()
+    {
+        $(document).on("select2:select", "#template-mail", function(item) {
+            let data = item.params.data;
+            let templateMailId = data.id;
+            let _token = $('input[name="_token"]').val();
+            //console.log(data.id);
+
+            $.ajax({
+                url : "{{ route('administrator.sms-mail-template-hashtag.html') }}",
+                method : "POST",
+                data : {id:templateMailId, _token:_token},
+                async : true,
+                dataType : 'json',
+                beforeSend: function () {
+                    $("#modalLoading").modal('show');
+                },
+                success: function(data){
+                    if (data.response === 'empty') {
+                        $('#information-input-box').remove();
+                    } else {
+                        $(`#information-input-box`).html(data.response);
+                    }
+                    singleTimePicker();
+                    singleDatePicker();
+
+                },
+                complete: function(data) {
+                    $("#modalLoading").modal('hide');
+                }
+            });
+            //template.after(clone);
+        });
+
+    }
+
     function searchChechkboxHastagIds()
     {
-
         $(document).on("click", ".hashtag", function() {
             //$(this).prop('checked');
 
@@ -467,6 +444,39 @@
             }
         });
         template.after(clone);
+    }
+
+    function singleTimePicker()
+    {
+        $('.single-time-picker').daterangepicker({
+            timePicker : true,
+            singleDatePicker:true,
+            timePicker24Hour : true,
+            timePickerIncrement : 15,
+            autoApply: true,
+            //autoUpdateInput: false,
+            //timePickerSeconds : true,
+            locale : {
+                format : 'HH:mm'
+            }
+            }).on('show.daterangepicker', function(ev, picker) {
+                picker.container.find(".calendar-table").hide();
+        }).val('');
+    }
+
+    function singleDatePicker(){
+            $('.single-date-picker').daterangepicker({
+            singleDatePicker: true,
+            //autoUpdateInput: false,
+            showDropdowns: true,
+            startDate: new Date(),
+            autoApply: true,
+            minYear: 2023,
+            maxYear: 2040,
+            locale: {
+                format: 'DD-MM-YYYY'
+            }
+        }).val('');
     }
 
 
@@ -563,41 +573,85 @@
 
 
     //     });
-        // var rfs = $(this).val();
-            // $.ajax({
-            //     url : "#",
-            //     method : "POST",
-            //     data : {date: rfs},
-            //     async : true,
-            //     dataType : 'json',
-            //     beforeSend: function () {
-            //         $("#modalLoading").modal('show');
-            //     },
-            //     success:function(data, text) {
-            //         vatMultiplier = parseFloat(data.vat.multiply_vat);
-            //         vatValue = parseFloat(data.vat.value);
-            //         $('#ppn-value').text(vatValue);
-            //         for (let index = 0; index < $('[name^="price_surcharge"]').length; index++) {
-            //             let val = $('#product-surcharge-' + index).val();
-            //             $('#product-surcharge-' + index).val(val).trigger("change");
-            //         }
-            //         for (let index = 0; index < $('[name^="price_sell"]').length; index++) {
-            //             let val = $('#product-sell-' + index).val();
-            //             $('#product-sell-' + index).val(val).trigger("change");
-            //         }
-            //         if ($('#package-service-plan').val().length != 0){
-            //             $('#package-service-plan').change();
-            //         }
-            //     },
-            //     error: function(request, status, error){
-            //         var regex = /(?<=\[).+?(?=\])/g;
-            //         toastr.error(request.responseJSON?.errors ? regex.exec(JSON.stringify(request.responseJSON?.errors)) : request.responseJSON?.message, error);
-            //     },
-            //     complete: function(data) {
-            //         $("#modalLoading").modal('hide');
-            //     },
-            // });
-        //});
+
+    //var stepper = new Stepper($('.bs-stepper')[0])
+
+        // $(".select2-js").select2({
+        //     placeholder: 'Pilih Perusahaan',
+        //     minimumInputLength: 2,
+        //     //theme: 'bootstrap4',
+        //     // ajax: {
+        //     //     url : "#",
+        //     //     method : "POST",
+        //     //     dataType : 'json',
+        //     //     delay: 1000,
+        //     //     data: function(params) {
+        //     //         var query = {
+        //     //             search: params.term,
+        //     //             page: params.page || 1
+        //     //         }
+        //     //         // Query parameters will be ?search=[term]&page=[page]
+        //     //         return query;
+        //     //     },
+        //     //     processResults: function (response) {
+        //     //         return {
+        //     //             results: response
+        //     //         };
+        //     //     }
+        //     // }
+        // });
+
+        // $(".select2-js-test").select2({
+        //     placeholder: 'Pilih Kategori',
+        //     minimumInputLength: 2,
+        //     //theme: 'bootstrap4',
+        //     // ajax: {
+        //     //     url : "#",
+        //     //     method : "POST",
+        //     //     dataType : 'json',
+        //     //     delay: 1000,
+        //     //     data: function(params) {
+        //     //         var query = {
+        //     //             search: params.term,
+        //     //             page: params.page || 1
+        //     //         }
+        //     //         // Query parameters will be ?search=[term]&page=[page]
+        //     //         return query;
+        //     //     },
+        //     //     processResults: function (response) {
+        //     //         return {
+        //     //             results: response
+        //     //         };
+        //     //     }
+        //     // }
+        // });
+
+        // tinymce.init({
+        //     selector: 'textarea#tinymce-editor',
+        //     //height: 500,
+        //     menubar: true,
+        //     plugins: [
+        //         'autolink lists link image charmap print preview anchor',
+        //         'searchreplace visualblocks code fullscreen',
+        //         'insertdatetime media table paste code help wordcount'
+        //     ],
+        //     toolbar: 'undo redo | formatselect | ' +
+        //     'bold italic backcolor | alignleft aligncenter ' +
+        //     'alignright alignjustify | bullist numlist outdent indent | ' +
+        //     'removeformat | help',
+        //     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        // });
+
+        // $('.daterange-single').daterangepicker({
+        //     singleDatePicker: true,
+        //     autoApply: true,
+        //     timePicker:true,
+        //     timePicker24Hour:true,
+        //     locale: {
+        //         format: 'DD-MM-YYYY T HH:mm'
+        //     }
+        // });
+
 </script>
 
 @endpush

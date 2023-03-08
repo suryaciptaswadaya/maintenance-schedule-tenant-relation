@@ -5,8 +5,8 @@ use App\Http\Controllers\SmsMailCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SmsMailController;
 use App\Http\Controllers\SmsMailTemplateController;
+use App\Http\Controllers\SmsMailTemplateHashtagController;
 use App\Http\Controllers\SmsTenantController;
-use App\Models\SmsMailCategory;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +66,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::prefix('/sms-mail-template')->as('sms-mail-template.')->group(function() {
             Route::post('json', [SmsMailTemplateController::class,'json'])->name('json');
         });
+
+        Route::prefix('/sms-mail-template-hashtag')->as('sms-mail-template-hashtag.')->group(function() {
+            Route::post('html', [SmsMailTemplateHashtagController::class,'html'])->name('html');
+        });
+
 
 
     });

@@ -20,9 +20,6 @@ class SmsMailTemplateController extends Controller
                     ->where('sms_mail_templates.name', 'like', '%' . $search . '%')
                     ->get();
 
-
-        Log::debug($mailTemplates);
-
         $response = [];
         foreach ($mailTemplates as $mailTemplate) {
             $response[] = [
