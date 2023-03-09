@@ -119,7 +119,6 @@
         categoryMailTrigger();
         getMailTempalte();
         mailTemplateHashTagTrigger();
-
         /*End - Kategori & Tempalte*/
 
 
@@ -130,6 +129,10 @@
         searchCheckboxHashTagCategoryIds();
         searchChechkboxHastagIds();
         /*End - Tenant*/
+
+        tinyMCEEditor();
+
+        replaceTemplateContent();
 
 
     });
@@ -373,6 +376,9 @@
                         $('#information-input-box').remove();
                     } else {
                         $(`#information-input-box`).html(data.response);
+
+                        getTitleContentTemplate(data.title, data.content);
+
                     }
                     singleTimePicker();
                     singleDatePicker();
@@ -477,6 +483,66 @@
                 format: 'DD-MM-YYYY'
             }
         }).val('');
+    }
+
+    function tinyMCEEditor()
+    {
+        tinymce.init({
+            selector: 'textarea.tinymce-editor',
+            height: 500,
+            menubar: false,
+            resize: 'both',
+            plugins: [
+                'autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        });
+    }
+
+    function getTitleContentTemplate(title, content)
+    {
+        $('#template-title').val(title);
+        //$('#template-content').val(content);
+        tinymce.get('template-content').setContent(content);
+        return;
+    }
+
+    function replaceTemplateContent()
+    {
+        var btnNextInformationPart = document.getElementById('btn-next-information-part'); // selecting the button element by its id
+
+        btnNextInformationPart.addEventListener('click', function() {
+            //console.time();
+            let informationTemplate = document.querySelectorAll('.information-template');
+            let textNeedReplace = document.getElementById('template-content').value;
+
+            let arrayInformationTemplate = [];
+
+            for (let i = 0; i < informationTemplate.length; i++) {
+                //if(informationTemplate.)
+                arrayInformationTemplate[ informationTemplate[i].id ] = informationTemplate[i].value;
+            }
+
+            // bisa pake ini atau regex
+            // for (let key in arrayInformationTemplate) {
+            //     textNeedReplace = textNeedReplace.replace(`[${key}]`, arrayInformationTemplate[key]);
+            // }
+
+            let regex = /\[(.*?)\]/g;
+
+            let result = textNeedReplace.replace(regex, (match, p1) => {
+                return arrayInformationTemplate[p1] || "";
+            });
+
+            tinymce.get('template-content').setContent(result);
+            //console.timeEnd();
+        });
     }
 
 

@@ -98,7 +98,7 @@
                     </div>
 
                     <button class="btn btn-primary" onclick="stepperForm.previous()">Previous</button>
-                    <button class="btn btn-primary btn-next-form" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-next-form" id="btn-next-information-part" onclick="stepperForm.next()">Next</button>
 
                 </div>
 
@@ -148,12 +148,25 @@
                 </div>
 
                 <div id="review-part" class="content bs-stepper-pane" role="tabpanel" aria-labelledby="review-part-trigger">
-                    <div id="information-input-box">
+                    <div class="row">
+                        <div class="col-sm-12">
+                        <!-- text input -->
+                            <div class="form-group">
+                                <label> Judul </label>
+                                <input id="template-title" type="text" name="title" class="form-control" placeholder="Judul ..." value="" >
+                            </div>
+                        </div>
 
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Deskripsi</label>
+                                <textarea id="template-content" name="description" class="form-control tinymce-editor" placeholder="Deskripsi ..." rows="2"></textarea>
+                            </div>
+                        </div>
                     </div>
 
                     <button class="btn btn-primary" onclick="stepperForm.previous()">Previous</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
 
                 </div>
 
