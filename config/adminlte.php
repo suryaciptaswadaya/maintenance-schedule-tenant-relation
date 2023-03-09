@@ -431,7 +431,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/momentjs/latest/moment.min.js',
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js',
                 ],
                 [
                     'type' => 'js',

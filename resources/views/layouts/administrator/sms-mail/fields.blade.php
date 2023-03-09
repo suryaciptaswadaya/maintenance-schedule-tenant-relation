@@ -15,7 +15,7 @@
             </div>
             @if ($action !== 'show')
                 <div class="">
-                    <button type="submit" class="btn btn-info btn-flat btn-sm">
+                    <button id="btn-submit" type="submit" class="btn btn-info btn-flat btn-sm disabled">
                         <i class="fa fa-check"></i>
                         &nbsp;&nbsp; Simpan
                     </button>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-next-form" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper" onclick="stepperForm.next()">Next</button>
                 </div>
 
                 <div id="information-part" class="content bs-stepper-pane" role="tabpanel" aria-labelledby="information-part-trigger">
@@ -97,8 +97,8 @@
 
                     </div>
 
-                    <button class="btn btn-primary" onclick="stepperForm.previous()">Previous</button>
-                    <button class="btn btn-primary btn-next-form" id="btn-next-information-part" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-stepper btn-prev-form" onclick="stepperForm.previous()">Previous</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper" id="btn-next-information-part" onclick="stepperForm.next()">Next</button>
 
                 </div>
 
@@ -143,8 +143,8 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="stepperForm.previous()">Previous</button>
-                    <button class="btn btn-primary btn-next-form" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-stepper btn-prev-form" onclick="stepperForm.previous()">Previous</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper btn-next-last-form" onclick="stepperForm.next()">Next</button>
                 </div>
 
                 <div id="review-part" class="content bs-stepper-pane" role="tabpanel" aria-labelledby="review-part-trigger">
@@ -165,7 +165,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="stepperForm.previous()">Previous</button>
+                    <button class="btn btn-primary btn-stepper btn-prev-form" onclick="stepperForm.previous()">Previous</button>
                     <!--<button type="submit" class="btn btn-primary">Submit</button>-->
 
                 </div>
