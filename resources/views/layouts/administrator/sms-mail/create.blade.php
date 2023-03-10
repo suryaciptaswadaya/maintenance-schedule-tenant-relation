@@ -3,27 +3,28 @@
 @section('title', 'Mail')
 
 @section('content_header')
-@include('layouts.include.loading',['modalTitle' => 'Please Wait...'])
-<div class="row mb-2">
-    <div class="col-sm-6">
-        <h1 class="m-0 text-dark">{{ $title }}</h1>
+    @include('layouts.include.loading', ['modalTitle' => 'Please Wait...'])
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1 class="m-0 text-dark">{{ $title }}</h1>
+        </div>
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Mail</a></li>
+                <li class="breadcrumb-item"><a href="#">{{ $title }}</a></li>
+            </ol>
+        </div>
     </div>
-    <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Mail</a></li>
-            <li class="breadcrumb-item"><a href="#">{{ $title }}</a></li>
-        </ol>
-    </div>
-</div>
 @stop
 
 @section('content')
-<div class="row">
-    <form id="mail-form-stepper" role="form" action="{{ route('administrator.sms-mail.store') }}" method="POST" class="col-md-12" onsubmit="return false" enctype="multipart/form-data">
-        @csrf
-        @include("layouts.administrator.sms-mail.fields")
-    </form>
-</div>
+    <div class="row">
+        <form id="mail-form-stepper" role="form" action="{{ route('administrator.sms-mail.store') }}" method="POST"
+            class="col-md-12" onsubmit="return false" enctype="multipart/form-data">
+            @csrf
+            @include('layouts.administrator.sms-mail.fields')
+        </form>
+    </div>
 @stop
 
 @section('css')
@@ -35,522 +36,556 @@
 @section('plugins.Sweetalert2', true)
 
 @push('js')
-<script src="https://cdn.tiny.cloud/1/88sysgy3de5twnl1vna0apf5dkw6ukgpi3c3bnsmj3fjqrz3/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-<script type="text/javascript">
-
-    //BS-Stepper Init
-    document.addEventListener('DOMContentLoaded', function () {
-
-         // Get the stepper form element and initialize a new stepper object
-        const stepperFormEl = document.querySelector('#stepperForm');
-        window.stepperForm = new Stepper(stepperFormEl);
-
-        // Get the form elements
-        const inputCategoryMailForm = document.getElementById('category-mail');
-        const inputTemplateMailForm = document.getElementById('template-mail');
-        const form = stepperFormEl.querySelector('.bs-stepper-content');
-
-        // Get the stepper pane and checkboxes
-        const stepperPanList = [...stepperFormEl.querySelectorAll('.bs-stepper-pane')];
-        const checkboxesTenant = document.querySelectorAll('.tenant');
-        const informationTemplate = document.querySelectorAll('.information-template');
-
-        // Add an event listener to the stepper form
-        stepperFormEl.addEventListener('show.bs-stepper', function (event) {
-
-        // Reset the form validation and get the current and next steps
-        form.classList.remove('was-validated');
-        const currentStep = event.detail.fromStep;
-        const nextStep = event.detail.toStep;
-
-        // Check if the necessary form fields are filled
-        const isCategoryPart = stepperPanList[currentStep].getAttribute('id') === 'category-part';
-        const isTenantPart = stepperPanList[currentStep].getAttribute('id') === 'tenant-part';
-        const isInformationPart = stepperPanList[currentStep].getAttribute('id') === 'information-part';
-        const isCategoryMailFormFilled = inputCategoryMailForm.value.length > 0;
-        const isTemplateMailFormFilled = inputTemplateMailForm.value.length > 0;
-        const isCheckedTenant = [...checkboxesTenant].some(checkbox => checkbox.checked);
-        const isCheckedInformation = [...informationTemplate].some(input => input.value);
-
-        if (
-            (isCategoryPart && (!isCategoryMailFormFilled || !isTemplateMailFormFilled)) ||
-            (isTenantPart && !isCheckedTenant) ||
-            (isInformationPart && !isCheckedInformation)
-        ) {
-            // If the form fields are not filled, prevent moving to the next step and show a warning message
-            event.preventDefault();
-            @include('layouts.include.sweetalert',['title' => 'Oops..', 'text'=>'Silahkan lengkapi data yang diinput', 'type'=>'error']);
-        }
+    <script src="https://cdn.tiny.cloud/1/88sysgy3de5twnl1vna0apf5dkw6ukgpi3c3bnsmj3fjqrz3/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script type="text/javascript">
+        //BS-Stepper Init
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
-    })
+        document.addEventListener('DOMContentLoaded', function() {
+            var stepperFormEl = document.querySelector('#stepperForm')
+            window.stepperForm = new Stepper(stepperFormEl)
+            // var btnNextList = [].slice.call(document.querySelectorAll('.btn-next-form'))
+            var stepperPanList = [].slice.call(stepperFormEl.querySelectorAll('.bs-stepper-pane'))
+            var inputCategoryMailForm = document.getElementById('category-mail')
+            var inputTemplateMailForm = document.getElementById('template-mail')
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            var form = stepperFormEl.querySelector('.bs-stepper-content');
+
+            stepperFormEl.addEventListener('show.bs-stepper', function (event) {
+
+                form.classList.remove('was-validated')
+                var nextStep = event.detail.indexStep
+                var currentStep = nextStep
+
+                var checkboxesTenant = document.querySelectorAll('.tenant');
+
+                var informationTemplate = document.querySelectorAll('.information-template');
+
+                var checkedTenant = false;
+                var checkedInformation = false;
+
+
+
+                for (var i = 0; i < checkboxesTenant.length; i++) {
+                    if (checkboxesTenant[i].checked) {
+                        checkedTenant = true;
+                        break;
+                    }
+                }
+
+                for (let i = 0; i < informationTemplate.length; i++) {
+                    if (informationTemplate[i].value) {
+                        checkedInformation = true;
+                        break;
+                    }
+                }
+
+                //console.log(currentStep);
+
+
+                if (currentStep > 0) {
+                    currentStep--
+                }
+
+                var stepperPan = stepperPanList[currentStep];
+
+                //console.log(stepperPan.getAttribute('id'));
+
+                if ((stepperPan.getAttribute('id') === 'category-part' && !inputCategoryMailForm.value.length || !inputTemplateMailForm.value.length)
+                    ||
+                    (stepperPan.getAttribute('id') === 'tenant-part' && !checkedTenant)
+                    ||
+                    (stepperPan.getAttribute('id') === 'information-part' && !checkedInformation)
+                ) {
+
+                    event.preventDefault()
+                    @include('layouts.include.sweetalert',['title' => 'Oops..', 'text'=>'Silahkan lengkapi data yang diinput', 'type'=>'error'])
+                    //form.classList.add('was-validated')
+
+                }
+            })
+
+        })
+
+        $(document).ready(function() {
+
+            /*Begin - Kategori & Tempalte*/
+            getCategory();
+            categoryMailTrigger();
+            getMailTempalte();
+            mailTemplateHashTagTrigger();
+            /*End - Kategori & Tempalte*/
+
+
+            /*Begin - Tenant*/
+            propCheckAllHashTag();
+            propCheckHashTag();
+            propCheckAllTenant();
+            searchCheckboxHashTagCategoryIds();
+            searchChechkboxHastagIds();
+            /*End - Tenant*/
+
+            tinyMCEEditor();
+
+            replaceTemplateContent();
+            toggleSubmitForm();
+            dateTimePicker();
+            addScheduler();
+
+
+        });
+
+        function searchCheckboxHashTagCategoryIds() {
+            $('.hashtag-category').click(function() {
+                $(this).prop('checked');
+                let template = $('#filter-tenant');
+
+                if (this.checked) {
+                    // if checked clone without events and append
+                    let idCategory = $(this).val();
+                    //console.log(idCategory);
+                    let idCheckbox = `checkbox-${idCategory}`;
+                    let _token = $('input[name="_token"]').val();
+                    let clone = template.clone().attr('id', idCategory).removeClass('d-none');
+                    $('.filter-category-title', clone).text($(this).data('text'));
+                    $('.filter-category-checkbox', clone).attr('id', idCheckbox);
+
+                    $('.filter-category-check-all', clone).attr('id', `check-all-${idCategory}`).attr('value',
+                        `check-all-${idCategory}`).addClass('check-all-hashtag');
+                    $('.filter-category-label-check-all', clone).attr('for', `check-all-${idCategory}`);
+
+                    //var id=$(this).val();
+                    //var listBandwidth = "#list-bandwidth";
+                    $.ajax({
+                        url: "{{ route('administrator.sms-hashtag.html') }}",
+                        method: "POST",
+                        data: {
+                            id_hash_tag_category: idCategory,
+                            _token: _token
+                        },
+                        async: true,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $("#modalLoading").modal('show');
+                        },
+                        success: function(data) {
+                            //console.log(idCheckbox);
+                            $(`#${idCheckbox}`).html(data.response);
+                        },
+                        complete: function(data) {
+                            $("#modalLoading").modal('hide');
+                        },
+                    });
+                    template.before(clone);
+                } else {
+                    //console.log($(this).val());
+                    $('#' + $(this).val()).remove();
+                }
+            });
         }
-    });
 
-    $(document).ready(function() {
+        function propCheckAllHashTag() {
+            $(document).on("change", ".check-all-hashtag", function() {
+                let checkAllClassGroup = $(this).val();
 
-        /*Begin - Kategori & Tempalte*/
-        getCategory();
-        categoryMailTrigger();
-        getMailTempalte();
-        mailTemplateHashTagTrigger();
-        /*End - Kategori & Tempalte*/
+                if ($(this).is(':checked')) {
+                    $(`.${checkAllClassGroup}`).prop('checked', true);
+                    $('#tenant').remove();
+                    getTenants();
+                } else {
+                    $(`.${checkAllClassGroup}`).prop('checked', false);
+                    $('#tenant').remove();
+                    getTenants();
+                }
+            });
+        }
+
+        function propCheckHashTag() {
+            $(document).on("change", ".hashtag", function() {
+                let checkHashTag = $(this).val();
+                if ($(this).is(':checked')) {
+                    $(`#${checkHashTag}`).prop('checked', true);
+                } else {
+                    $(`#${checkHashTag}`).prop('checked', false);
+                }
+            });
+        }
+
+        function propCheckAllTenant() {
+            $(document).on("change", "#check-all-tenant", function() {
+                let checkAllClassGroup = $(this).val();
+                if ($(this).is(':checked')) {
+                    $(`.${checkAllClassGroup}`).prop('checked', true);
+                } else {
+                    $(`.${checkAllClassGroup}`).prop('checked', false);
+                }
+            });
+        }
 
 
-        /*Begin - Tenant*/
-        propCheckAllHashTag();
-        propCheckHashTag();
-        propCheckAllTenant();
-        searchCheckboxHashTagCategoryIds();
-        searchChechkboxHastagIds();
-        /*End - Tenant*/
 
-        tinyMCEEditor();
+        function getHashTagsCategoryIds() {
+            let searchCategoryIds = $(".hashtag-category:checked").map(function() {
+                return $(this).val();
+            }).toArray();
 
-        replaceTemplateContent();
-        toggleSubmitForm();
+            return searchCategoryIds;
+        }
+
+        function getHashTagsIds() {
+            let searchHashtagIds = $(".hashtag:checked").map(function() {
+                return $(this).val();
+            }).toArray();
+
+            //console.log(searchHashtagIds);;
+            return searchHashtagIds;
+        }
+
+        function getTenantIds() {
+            let searchTenantIds = $(".tenant:checked").map(function() {
+                return $(this).val();
+            }).toArray();
+
+            //console.log(searchHashtagIds);;
+            return searchTenantIds;
+        }
+
+        function getCategory() {
+            $("#category-mail").select2({
+                placeholder: 'Pilih Kategori',
+                //minimumInputLength: 1,
+                //closeOnSelect: false,
+                ajax: {
+                    url: "{{ route('administrator.sms-mail-category.json') }}",
+                    method: "POST",
+                    dataType: 'json',
+                    delay: 1000,
+                    data: function(params) {
+                        var query = {
+                            search: params.term
+                        }
+                        // Query parameters will be ?search=[term]&page=[page]
+                        return query;
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    }
+                }
+            });
 
 
-    });
+        }
 
+        function categoryMailTrigger() {
+            $('#category-mail').on('select2:select', function() {
+                let categoryId = getCategoryMailId();
+                //console.log(categoryId);
+                $("#template-mail").empty().trigger('change');
+                getMailTempalte(categoryId)
+            });
+        }
 
+        function getCategoryMailId() {
+            let categoryIds = "";
+            categoryIds = $('#category-mail').find(":selected").val();
+            return categoryIds;
+        }
 
-    function searchCheckboxHashTagCategoryIds(){
-        $('.hashtag-category').click(function(){
-            $(this).prop('checked');
-            let template = $('#filter-tenant');
+        function getMailTempalte(mailCategoryId) {
+            $("#template-mail").select2({
+                placeholder: 'Pilih Template',
+                //minimumInputLength: 1,
+                //closeOnSelect: false,
+                ajax: {
+                    url: "{{ route('administrator.sms-mail-template.json') }}",
+                    method: "POST",
+                    dataType: 'json',
+                    delay: 1000,
+                    data: function(params) {
+                        var query = {
+                            search: params.term,
+                            mail_category_id: mailCategoryId
+                        }
+                        // Query parameters will be ?search=[term]&page=[page]
+                        return query;
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    }
+                }
+            });
+        }
 
-            if (this.checked) {
-                // if checked clone without events and append
-                let idCategory = $(this).val();
-                //console.log(idCategory);
-                let idCheckbox = `checkbox-${idCategory}`;
+        function mailTemplateHashTagTrigger() {
+            $(document).on("select2:select", "#template-mail", function(item) {
+                let data = item.params.data;
+                let templateMailId = data.id;
                 let _token = $('input[name="_token"]').val();
-                let clone = template.clone().attr('id',idCategory).removeClass('d-none');
-                $('.filter-category-title', clone).text($(this).data('text'));
-                $('.filter-category-checkbox', clone).attr('id',idCheckbox);
+                //console.log(data.id);
 
-                $('.filter-category-check-all', clone).attr('id',`check-all-${idCategory}`).attr('value',`check-all-${idCategory}`).addClass('check-all-hashtag');
-                $('.filter-category-label-check-all', clone).attr('for',`check-all-${idCategory}`);
-
-                //var id=$(this).val();
-                //var listBandwidth = "#list-bandwidth";
                 $.ajax({
-                    url : "{{ route('administrator.sms-hashtag.html') }}",
-                    method : "POST",
-                    data : {id_hash_tag_category: idCategory,  _token:_token},
-                    async : true,
-                    dataType : 'json',
-                    beforeSend: function () {
+                    url: "{{ route('administrator.sms-mail-template-hashtag.html') }}",
+                    method: "POST",
+                    data: {
+                        id: templateMailId,
+                        _token: _token
+                    },
+                    async: true,
+                    dataType: 'json',
+                    beforeSend: function() {
                         $("#modalLoading").modal('show');
                     },
-                    success: function(data){
-                        //console.log(idCheckbox);
-                        $(`#${idCheckbox}`).html(data.response);
-                    },complete: function(data) {
-                        $("#modalLoading").modal('hide');
+                    success: function(data) {
+                        if (data.response === 'empty') {
+                            $('#information-input-box').remove();
+                        } else {
+                            $(`#information-input-box`).html(data.response);
+
+                            getTitleContentTemplate(data.title, data.content);
+
+                        }
+                        singleTimePicker();
+                        singleDatePicker();
+
                     },
+                    complete: function(data) {
+                        $("#modalLoading").modal('hide');
+                    }
                 });
-                template.before(clone);
-            } else {
-                //console.log($(this).val());
-                $('#'+$(this).val()).remove();
-            }
-        });
-    }
+                //template.after(clone);
+            });
 
-    function propCheckAllHashTag()
-    {
-        $(document).on("change", ".check-all-hashtag", function() {
-            let checkAllClassGroup = $(this).val();
-            // let status = this.checked ? true : false;
-            // $(this).prop({
-            //     'checked': status
-            // });
+        }
 
-            if ($(this).is(':checked')) {
-                $(`.${checkAllClassGroup}`).prop('checked', true);
-                $('#tenant').remove();
-                getTenants();
-            }else{
-                $(`.${checkAllClassGroup}`).prop('checked', false);
-                $('#tenant').remove();
-                getTenants();
-            }
-            //console.log($(this).val());
-            //let test = getHashTagsIds();
-            // let test = getHashTagsIds();
-            // console.log(test);
-        });
-    }
+        function searchChechkboxHastagIds() {
+            $(document).on("click", ".hashtag", function() {
+                //$(this).prop('checked');
 
-    function propCheckHashTag()
-    {
-        $(document).on("change", ".hashtag", function() {
-            let checkHashTag = $(this).val();
-            // let status = this.checked ? true : false;
-            // $(this).prop({
-            //     'checked': status
-            // });
-
-            if ($(this).is(':checked')) {
-                $(`#${checkHashTag}`).prop('checked', true);
-            }else{
-                $(`#${checkHashTag}`).prop('checked', false);
-            }
-            //console.log($(this).val());
-            //let test = getHashTagsIds();
-            // let test = getHashTagsIds();
-            // console.log(test);
-        });
-    }
-
-    function propCheckAllTenant()
-    {
-        $(document).on("change", "#check-all-tenant", function() {
-            let checkAllClassGroup = $(this).val();
-            //console.log(checkAllClassGroup);
-            if ($(this).is(':checked')) {
-                $(`.${checkAllClassGroup}`).prop('checked', true);
-            }else{
-                $(`.${checkAllClassGroup}`).prop('checked', false);
-            }
-        });
-    }
-
-
-
-    function getHashTagsCategoryIds()
-    {
-        let searchCategoryIds = $(".hashtag-category:checked").map(function(){
-            return $(this).val();
-        }).toArray();
-
-        return searchCategoryIds;
-    }
-
-    function getHashTagsIds()
-    {
-        let searchHashtagIds = $(".hashtag:checked").map(function(){
-            return $(this).val();
-        }).toArray();
-
-        //console.log(searchHashtagIds);;
-        return searchHashtagIds;
-    }
-
-    function getTenantIds()
-    {
-        let searchTenantIds = $(".tenant:checked").map(function(){
-            return $(this).val();
-        }).toArray();
-
-        //console.log(searchHashtagIds);;
-        return searchTenantIds;
-    }
-
-    function getCategory(){
-        $("#category-mail").select2({
-            placeholder: 'Pilih Kategori',
-            //minimumInputLength: 1,
-            //closeOnSelect: false,
-            ajax: {
-                url : "{{ route('administrator.sms-mail-category.json') }}",
-                method : "POST",
-                dataType : 'json',
-                delay: 1000,
-                data: function(params) {
-                    var query = {
-                        search: params.term
-                    }
-                    // Query parameters will be ?search=[term]&page=[page]
-                    return query;
-                },
-                processResults: function (response) {
-                    return {
-                        results: response
-                    };
+                if (this.checked) {
+                    $('#tenant').remove();
+                    getTenants();
+                } else {
+                    $('#tenant').remove();
+                    getTenants();
                 }
-            }
-        });
+            });
+        }
 
+        function getTenants() {
+            let template = $('#filter-tenant');
 
-    }
+            //let hashTagCategoryIds = getHashTagsCategoryIds();
+            let hashTagIds = getHashTagsIds();
 
-    function categoryMailTrigger()
-    {
-        $('#category-mail').on('select2:select',function(){
-            let categoryId = getCategoryMailId();
-            //console.log(categoryId);
-            $("#template-mail").empty().trigger('change');
-            getMailTempalte(categoryId)
-        });
-    }
+            // if checked clone without events and append
+            let idCategory = 'tenant';
+            let idCheckbox = `checkbox-${idCategory}`;
 
-    function getCategoryMailId()
-    {
-        let categoryIds = "";
-        categoryIds = $('#category-mail').find(":selected").val();
-        return categoryIds;
-    }
-
-    function getMailTempalte(mailCategoryId)
-    {
-        $("#template-mail").select2({
-            placeholder: 'Pilih Template',
-            //minimumInputLength: 1,
-            //closeOnSelect: false,
-            ajax: {
-                url : "{{ route('administrator.sms-mail-template.json') }}",
-                method : "POST",
-                dataType : 'json',
-                delay: 1000,
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        mail_category_id: mailCategoryId
-                    }
-                    // Query parameters will be ?search=[term]&page=[page]
-                    return query;
-                },
-                processResults: function (response) {
-                    return {
-                        results: response
-                    };
-                }
-            }
-        });
-    }
-
-    function mailTemplateHashTagTrigger()
-    {
-        $(document).on("select2:select", "#template-mail", function(item) {
-            let data = item.params.data;
-            let templateMailId = data.id;
             let _token = $('input[name="_token"]').val();
-            //console.log(data.id);
+            let clone = template.clone().attr('id', idCategory).removeClass('d-none');
+            $('.filter-category-title', clone).text("TENANTS");
+            $('.filter-category-checkbox', clone).attr('id', idCheckbox);
 
+            $('.filter-category-check-all', clone).attr('id', `check-all-${idCategory}`).attr('value',
+                `check-all-${idCategory}`);
+            $('.filter-category-label-check-all', clone).attr('for', `check-all-${idCategory}`);
+
+            //var id=$(this).val();
+            //var listBandwidth = "#list-bandwidth";
             $.ajax({
-                url : "{{ route('administrator.sms-mail-template-hashtag.html') }}",
-                method : "POST",
-                data : {id:templateMailId, _token:_token},
-                async : true,
-                dataType : 'json',
-                beforeSend: function () {
+                url: "{{ route('administrator.sms-tenant.html') }}",
+                method: "POST",
+                data: {
+                    hash_tag_ids: hashTagIds,
+                    _token: _token
+                },
+                async: true,
+                dataType: 'json',
+                beforeSend: function() {
                     $("#modalLoading").modal('show');
                 },
-                success: function(data){
+                success: function(data) {
                     if (data.response === 'empty') {
-                        $('#information-input-box').remove();
+                        $('#tenant').remove();
                     } else {
-                        $(`#information-input-box`).html(data.response);
-
-                        getTitleContentTemplate(data.title, data.content);
-
+                        $(`#${idCheckbox}`).html(data.response);
                     }
-                    singleTimePicker();
-                    singleDatePicker();
-
                 },
                 complete: function(data) {
                     $("#modalLoading").modal('hide');
                 }
             });
-            //template.after(clone);
-        });
+            template.after(clone);
+        }
 
-    }
-
-    function searchChechkboxHastagIds()
-    {
-        $(document).on("click", ".hashtag", function() {
-            //$(this).prop('checked');
-
-            if (this.checked) {
-                $('#tenant').remove();
-                getTenants();
-            }else{
-                $('#tenant').remove();
-                getTenants();
-            }
-        });
-    }
-
-    function getTenants()
-    {
-        let template = $('#filter-tenant');
-
-        //let hashTagCategoryIds = getHashTagsCategoryIds();
-        let hashTagIds = getHashTagsIds();
-
-        // if checked clone without events and append
-        let idCategory = 'tenant';
-        let idCheckbox = `checkbox-${idCategory}`;
-
-        let _token = $('input[name="_token"]').val();
-        let clone = template.clone().attr('id',idCategory).removeClass('d-none');
-        $('.filter-category-title', clone).text("TENANTS");
-        $('.filter-category-checkbox', clone).attr('id',idCheckbox);
-
-        $('.filter-category-check-all', clone).attr('id',`check-all-${idCategory}`).attr('value',`check-all-${idCategory}`);
-        $('.filter-category-label-check-all', clone).attr('for',`check-all-${idCategory}`);
-
-        //var id=$(this).val();
-        //var listBandwidth = "#list-bandwidth";
-        $.ajax({
-            url : "{{ route('administrator.sms-tenant.html') }}",
-            method : "POST",
-            data : {hash_tag_ids:hashTagIds, _token:_token},
-            async : true,
-            dataType : 'json',
-            beforeSend: function () {
-                $("#modalLoading").modal('show');
-            },
-            success: function(data){
-                if (data.response === 'empty') {
-                    $('#tenant').remove();
-                } else {
-                    $(`#${idCheckbox}`).html(data.response);
+        function singleTimePicker() {
+            $('.single-time-picker').daterangepicker({
+                timePicker: true,
+                singleDatePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 15,
+                autoApply: true,
+                //autoUpdateInput: false,
+                //timePickerSeconds : true,
+                locale: {
+                    format: 'HH:mm'
                 }
-            },
-            complete: function(data) {
-                $("#modalLoading").modal('hide');
-            }
-        });
-        template.after(clone);
-    }
-
-    function singleTimePicker()
-    {
-        $('.single-time-picker').daterangepicker({
-            timePicker : true,
-            singleDatePicker:true,
-            timePicker24Hour : true,
-            timePickerIncrement : 15,
-            autoApply: true,
-            //autoUpdateInput: false,
-            //timePickerSeconds : true,
-            locale : {
-                format : 'HH:mm'
-            }
             }).on('show.daterangepicker', function(ev, picker) {
                 picker.container.find(".calendar-table").hide();
-        }).val('');
-    }
+            }).val('');
+        }
 
-    function singleDatePicker(){
+        function singleDatePicker() {
             $('.single-date-picker').daterangepicker({
-            singleDatePicker: true,
-            //autoUpdateInput: false,
-            showDropdowns: true,
-            startDate: new Date(),
-            autoApply: true,
-            minYear: 2023,
-            maxYear: 2040,
-            locale: {
-                format: 'DD-MM-YYYY'
-            }
-        }).val('');
-    }
-
-    function tinyMCEEditor()
-    {
-        tinymce.init({
-            selector: 'textarea.tinymce-editor',
-            height: 500,
-            menubar: true,
-            resize: 'both',
-            plugins: [
-                'autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
-            ],
-            toolbar: 'undo redo | formatselect | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-        });
-    }
-
-    function getTitleContentTemplate(title, content)
-    {
-        $('#template-title').val(title);
-        //$('#template-content').val(content);
-        tinymce.get('template-content').setContent(content);
-        return;
-    }
-
-    function replaceTemplateContent()
-    {
-        var btnNextInformationPart = document.getElementById('btn-next-information-part'); // selecting the button element by its id
-
-        btnNextInformationPart.addEventListener('click', function() {
-            //console.time();
-            let informationTemplate = document.querySelectorAll('.information-template');
-            let textNeedReplace = document.getElementById('template-content').value;
-
-            let arrayInformationTemplate = [];
-
-            for (let i = 0; i < informationTemplate.length; i++) {
-                if(informationTemplate[i].classList.contains('single-date-picker')){
-                    arrayInformationTemplate[ informationTemplate[i].id ] =   moment(informationTemplate[i].value, 'DD-MM-YYYY').locale('id-ID').format('dddd, DD MMMM YYYY')
-                }else{
-                    arrayInformationTemplate[ informationTemplate[i].id ] = informationTemplate[i].value;
+                singleDatePicker: true,
+                //autoUpdateInput: false,
+                showDropdowns: true,
+                startDate: new Date(),
+                autoApply: true,
+                minYear: 2023,
+                maxYear: 2040,
+                locale: {
+                    format: 'DD-MM-YYYY'
                 }
-            }
+            }).val('');
+        }
 
-            //bisa pake ini atau regex
-            for (let key in arrayInformationTemplate) {
-                textNeedReplace = textNeedReplace.replace(`[${key}]`, arrayInformationTemplate[key]);
-            }
-
-            // let regex = /\[(.*?)\]/g;
-
-            // let result = textNeedReplace.replace(regex, (match, p1) => {
-            //     return arrayInformationTemplate[p1] || "";
-            // });
-
-            tinymce.get('template-content').setContent(textNeedReplace);
-            //console.timeEnd();
-        });
-    }
-
-    function toggleSubmitForm() {
-        const form = document.getElementById("mail-form-stepper");
-        const btnStepper = document.querySelectorAll('.btn-stepper');
-        const btnSubmit = document.getElementById("btn-submit");
-
-        // Loop through all the buttons and add a click event listener
-        btnStepper.forEach(button => {
-            button.addEventListener('click', () => {
-            // If the button clicked is a "previous" button
-            if (button.classList.contains('btn-prev-form')) {
-                // Disable the submit button, add the "disabled" class, and set the form submit event to return false
-                btnSubmit.disabled = true;
-                btnSubmit.classList.add("disabled");
-                form.onsubmit = () => false;
-            }
-            // If the button clicked is a "next" button
-            else if (button.classList.contains('btn-next-form')) {
-                // Check if the button is the last one
-                const isLastButton = button.classList.contains('btn-next-last-form');
-                // Enable or disable the submit button depending on whether it's the last button or not, and toggle the "disabled" class accordingly
-                btnSubmit.disabled = !isLastButton;
-                btnSubmit.classList.toggle("disabled", !isLastButton);
-                // Set the form submit event to return true if it's the last button, false otherwise
-                form.onsubmit = () => isLastButton;
-                // If it's the last button, prevent the default form submit behavior
-                if (isLastButton) {
-                event.preventDefault();
+        function dateTimePicker() {
+            $('.date-time-picker').daterangepicker({
+                timePicker: true,
+                singleDatePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 15,
+                autoApply: true,
+                //autoUpdateInput: false,
+                //timePickerSeconds : true,
+                locale: {
+                    format: 'DD-MM-YYYY HH:mm'
                 }
-            }
             });
-        });
-    }
-</script>
+        }
 
+        function tinyMCEEditor() {
+            tinymce.init({
+                selector: 'textarea.tinymce-editor',
+                height: 500,
+                menubar: true,
+                resize: 'both',
+                plugins: [
+                    'autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: 'undo redo | formatselect | ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            });
+        }
+
+        function getTitleContentTemplate(title, content) {
+            $('#template-title').val(title);
+            //$('#template-content').val(content);
+            $('#template-content-hidden').val(content);
+            //tinymce.get('template-content').setContent(content);
+            return;
+        }
+
+        function replaceTemplateContent() {
+            var btnNextInformationPart = document.getElementById('btn-next-information-part'); // selecting the button element by its id
+
+            btnNextInformationPart.addEventListener('click', function() {
+                //console.time();
+                let informationTemplate = document.querySelectorAll('.information-template');
+                let textNeedReplace = document.getElementById('template-content-hidden').value;
+
+                let arrayInformationTemplate = [];
+
+                for (let i = 0; i < informationTemplate.length; i++) {
+                    if (informationTemplate[i].classList.contains('single-date-picker')) {
+                        arrayInformationTemplate[informationTemplate[i].id] = moment(informationTemplate[i].value,
+                            'DD-MM-YYYY').locale('id-ID').format('dddd, DD MMMM YYYY')
+                    } else {
+                        arrayInformationTemplate[informationTemplate[i].id] = informationTemplate[i].value;
+                    }
+                }
+
+                //bisa pake ini atau regex
+                for (let key in arrayInformationTemplate) {
+                    textNeedReplace = textNeedReplace.replace(`[${key}]`, arrayInformationTemplate[key]);
+                }
+
+                // let regex = /\[(.*?)\]/g;
+
+                // let result = textNeedReplace.replace(regex, (match, p1) => {
+                //     return arrayInformationTemplate[p1] || "";
+                // });
+
+                tinymce.get('template-content').setContent(textNeedReplace);
+                //console.timeEnd();
+            });
+        }
+
+        function toggleSubmitForm() {
+            const form = document.getElementById("mail-form-stepper");
+            const btnStepper = document.querySelectorAll('.btn-stepper');
+            const btnSubmit = document.getElementById("btn-submit");
+
+            // Loop through all the buttons and add a click event listener
+            btnStepper.forEach(button => {
+                button.addEventListener('click', () => {
+                    // If the button clicked is a "previous" button
+                    if (button.classList.contains('btn-prev-form')) {
+                        // Disable the submit button, add the "disabled" class, and set the form submit event to return false
+                        btnSubmit.disabled = true;
+                        btnSubmit.classList.add("disabled");
+                        form.onsubmit = () => false;
+                    }
+                    // If the button clicked is a "next" button
+                    else if (button.classList.contains('btn-next-form')) {
+                        // Check if the button is the last one
+                        const isLastButton = button.classList.contains('btn-next-last-form');
+                        // Enable or disable the submit button depending on whether it's the last button or not, and toggle the "disabled" class accordingly
+                        btnSubmit.disabled = !isLastButton;
+                        btnSubmit.classList.toggle("disabled", !isLastButton);
+                        // Set the form submit event to return true if it's the last button, false otherwise
+                        form.onsubmit = () => isLastButton;
+                        // If it's the last button, prevent the default form submit behavior
+                        if (isLastButton) {
+                            event.preventDefault();
+                        }
+                    }
+                });
+            });
+        }
+
+        function addScheduler() {
+            let countSchedulerDateTime = 1;
+
+            $('#btn-add-scheduler').click(function(event) {
+                const template = $('#scheduler');
+                var clone = template.clone().removeAttr('id').removeClass('d-none');
+                $('.input-scheduler', clone).attr('name', 'scheduler_date_time[]').attr('id',
+                    'scheduler-date-time-' + countSchedulerDateTime).addClass('date-time-picker');
+                $('.btn-remove-scheduler', clone).click(function() {
+                    $(this).closest('div.scheduler').remove();
+                });
+                template.before(clone);
+
+                countSchedulerDateTime++;
+                dateTimePicker();
+
+            });
+
+        }
+    </script>
 @endpush

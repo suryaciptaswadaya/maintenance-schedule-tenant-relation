@@ -21,7 +21,7 @@ class SmsMailTemplateHashtagController extends Controller
             $informationHtml .= '<div class="col-md-4">';
             $informationHtml .=     '<div class="form-group">';
             $informationHtml .=         '<label for="'.$mailTemplateHashTag->field.'">'.$mailTemplateHashTag->title.'</label>';
-            $informationHtml .=         '<input type="text" class="form-control information-template '.SmsMailTemplateHashtag::VALUE_TYPE_HTML_CLASS[$mailTemplateHashTag->value_type].'" id="'.$mailTemplateHashTag->field.'" placeholder="Masukkan '.$mailTemplateHashTag->title.'">';
+            $informationHtml .=         '<input type="text" name="mail_template_hashtag[]" class="form-control information-template '.SmsMailTemplateHashtag::VALUE_TYPE_HTML_CLASS[$mailTemplateHashTag->value_type].'" id="'.$mailTemplateHashTag->field.'" placeholder="Masukkan '.$mailTemplateHashTag->title.'">';
             $informationHtml .=     '</div>';
             $informationHtml .= '</div>';
         }

@@ -35,7 +35,7 @@ class SmsHashTagController extends Controller
                 $hashtagHtml .= '<div class="col-sm-3">';
                 $hashtagHtml .='<div class="form-group">';
                 $hashtagHtml .='<div class="custom-control custom-switch custom-switch-off-warning custom-switch-on-success">';
-                $hashtagHtml .='<input id="'.$hashTag->id.'" class="custom-control-input custom-control-input-danger hashtag check-all-'.$filterHashTagCategory.'" data-text="'.$hashTag->name.'" type="checkbox" value="'.$hashTag->id.'">';
+                $hashtagHtml .='<input id="'.$hashTag->id.'" name="hashtag[]" class="custom-control-input custom-control-input-danger hashtag check-all-'.$filterHashTagCategory.'" data-text="'.$hashTag->name.'" type="checkbox" value="'.$hashTag->id.'">';
                 $hashtagHtml .='<label for="'.$hashTag->id.'" class="custom-control-label">'.$hashTag->name.'</label>';
                 $hashtagHtml .='</div>';
                 $hashtagHtml .='</div>';

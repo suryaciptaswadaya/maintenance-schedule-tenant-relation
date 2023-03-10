@@ -57,11 +57,17 @@
                         <span class="bs-stepper-label">Review</span>
                     </button>
                 </div>
-
+                <div class="line"></div>
+                <div class="step" data-target="#scheduler-part">
+                    <button type="button" class="step-trigger" role="tab" aria-controls="scheduler-part"
+                        id="scheduler-part-trigger" aria-selected="false" disabled="disabled">
+                        <span class="bs-stepper-circle">5</span>
+                        <span class="bs-stepper-label">Penjadwalan</span>
+                    </button>
+                </div>
 
             </div>
             <div class="bs-stepper-content">
-
                 <div id="category-part" class="content active dstepper-block bs-stepper-pane" role="tabpanel"
                     aria-labelledby="category-part-trigger">
 
@@ -70,7 +76,8 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label> {{ __('Kategori') }} </label>
-                                <select id="category-mail" class="form-control select2" style="width: 100%;" name="category">
+                                <select id="category-mail" class="form-control select2" style="width: 100%;"
+                                    name="category_mail">
                                 </select>
                                 <div class="invalid-feedback">Please fill the category field</div>
                             </div>
@@ -82,27 +89,33 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label> {{ __('Template') }} </label>
-                                <select id="template-mail" class="form-control select2" style="width: 100%;" name="template">
+                                <select id="template-mail" class="form-control select2" style="width: 100%;"
+                                    name="template_mail">
                                 </select>
                                 <div class="invalid-feedback">Please fill the Template field</div>
                             </div>
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-next-form btn-stepper" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper"
+                        onclick="stepperForm.next()">Next</button>
                 </div>
 
-                <div id="information-part" class="content bs-stepper-pane" role="tabpanel" aria-labelledby="information-part-trigger">
+                <div id="information-part" class="content bs-stepper-pane" role="tabpanel"
+                    aria-labelledby="information-part-trigger">
                     <div id="information-input-box">
 
                     </div>
 
-                    <button class="btn btn-primary btn-stepper btn-prev-form" onclick="stepperForm.previous()">Previous</button>
-                    <button class="btn btn-primary btn-next-form btn-stepper" id="btn-next-information-part" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-stepper btn-prev-form"
+                        onclick="stepperForm.previous()">Previous</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper" id="btn-next-information-part"
+                        onclick="stepperForm.next()">Next</button>
 
                 </div>
 
-                <div id="tenant-part" class="content bs-stepper-pane" role="tabpanel" aria-labelledby="tenant-part-trigger">
+                <div id="tenant-part" class="content bs-stepper-pane" role="tabpanel"
+                    aria-labelledby="tenant-part-trigger">
                     <div class="row">
                         @foreach ($hashtagCategories as $hashtagCategory)
                             <div class="col-sm-3">
@@ -112,7 +125,8 @@
                                         <input class="custom-control-input hashtag-category"
                                             data-text="{{ str_replace('_', ' ', strtoupper($hashtagCategory->name)) }}"
                                             type="checkbox" id="{{ $hashtagCategory->name }}"
-                                            value="{{ $hashtagCategory->id }}">
+                                            value="{{ $hashtagCategory->id }}"
+                                            name="hashtag_category[]">
                                         <label for="{{ $hashtagCategory->name }}"
                                             class="custom-control-label">{{ str_replace('_', ' ', strtoupper($hashtagCategory->name)) }}</label>
                                     </div>
@@ -143,38 +157,81 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-stepper btn-prev-form" onclick="stepperForm.previous()">Previous</button>
-                    <button class="btn btn-primary btn-next-form btn-stepper btn-next-last-form" onclick="stepperForm.next()">Next</button>
+                    <button class="btn btn-primary btn-stepper btn-prev-form"
+                        onclick="stepperForm.previous()">Previous</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper"
+                        onclick="stepperForm.next()">Next</button>
                 </div>
 
-                <div id="review-part" class="content bs-stepper-pane" role="tabpanel" aria-labelledby="review-part-trigger">
+                <div id="review-part" class="content bs-stepper-pane" role="tabpanel"
+                    aria-labelledby="review-part-trigger">
                     <div class="row">
                         <div class="col-sm-12">
-                        <!-- text input -->
+                            <!-- text input -->
                             <div class="form-group">
                                 <label> Judul </label>
-                                <input id="template-title" type="text" name="title" class="form-control" placeholder="Judul ..." value="" >
+                                <input id="template-title" type="text" name="mail_title" class="form-control"
+                                    placeholder="Judul ..." value="">
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Deskripsi</label>
-                                <textarea id="template-content" name="description" class="form-control tinymce-editor" placeholder="Deskripsi ..." rows="2"></textarea>
+                                <textarea id="template-content" name="mail_description" class="form-control tinymce-editor" placeholder="Deskripsi ..."
+                                    rows="2"></textarea>
+                                <textarea id="template-content-hidden" hidden></textarea>
+
                             </div>
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-stepper btn-prev-form" onclick="stepperForm.previous()">Previous</button>
-                    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+                    <button class="btn btn-primary btn-stepper btn-prev-form"
+                        onclick="stepperForm.previous()">Previous</button>
+                    <button class="btn btn-primary btn-next-form btn-stepper btn-next-last-form"
+                        onclick="stepperForm.next()">Next</button>
 
                 </div>
 
+                <div id="scheduler-part" class="content bs-stepper-pane" role="tabpanel"
+                    aria-labelledby="scheduler-part-trigger">
+                    <div class="row">
 
+                        <div class="form-group col-sm-10">
+                            <label>Tanggal & Waktu Penjadwalan</label>
+                            <br />
+                            <input id="scheduler-date-time-0" name="scheduler_date_time[]" class="form-control date-time-picker">
+                        </div>
+
+                        <div class="form-group col-sm-2">
+                            <label>{{ __('Action') }}</label><br />
+                            <button type="button" class="btn btn-primary btn-block btn-tooltip"
+                                id="btn-add-scheduler" title="{{ 'Tambah Jadwal' }} ">
+                                <i class="fa fa-plus p-0"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="scheduler d-none" id="scheduler">
+                        <div class="row">
+                            <div class="form-group col-sm-10">
+                                <input  class="form-control input-scheduler">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <button type="button"
+                                    class="btn btn-danger btn-block btn-tooltip btn-remove-scheduler"
+                                    title="{{ __('Remove') }}">
+                                    <i class="fa fa-trash p-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-stepper btn-prev-form"
+                        onclick="stepperForm.previous()">Previous</button>
+                    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+                </div>
             </div>
-
-
         </div>
     </div>
 </div>
-

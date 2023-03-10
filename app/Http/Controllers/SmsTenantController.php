@@ -25,7 +25,7 @@ class SmsTenantController extends Controller
                     $tenantHtml .= '<div class="col-sm-3">';
                     $tenantHtml .='<div class="form-group">';
                     $tenantHtml .='<div class="custom-control custom-switch custom-switch-off-warning custom-switch-on-success">';
-                    $tenantHtml .='<input id="'.$tenant->tenant_id.'" class="custom-control-input custom-control-input-danger tenant check-all-tenant" data-text="'.$tenant->tenant_name.'" type="checkbox" value="'.$tenant->tenant_id.'">';
+                    $tenantHtml .='<input id="'.$tenant->tenant_id.'" name="tenant[]" class="custom-control-input custom-control-input-danger tenant check-all-tenant" data-text="'.$tenant->tenant_name.'" type="checkbox" value="'.$tenant->tenant_id.'">';
                     $tenantHtml .='<label for="'.$tenant->tenant_id.'" class="custom-control-label">'.$tenant->tenant_name.'</label>';
                     $tenantHtml .='</div>';
                     $tenantHtml .='</div>';
