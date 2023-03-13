@@ -77,7 +77,9 @@
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 },
                 columns: [
-                    { title: "{{ __('Nama') }}", data: 'subject', name: 'subject', defaultContent: '-', class: 'text-center', orderable: false },
+                    { title: "{{ __('Mail') }}", data: 'name', name: 'name', defaultContent: '-', class: 'text-center', orderable: false },
+                    { title: "{{ __('Tenant Terdampak') }}", data: 'affected_tenant', name: 'affected_tenant', defaultContent: '-', class: 'text-center', orderable: false },
+                    { title: "{{ __('Jumlah Pengingat') }}", data: 'schedule_reminder', name: 'schedule_reminder', defaultContent: '-', class: 'text-center', orderable: false },
                     { title: "{{ __('Action') }}", data: 'action', name: 'action', defaultContent: ' - ', class: 'text-center',searchable:false, orderable: false },
                 ]
             });

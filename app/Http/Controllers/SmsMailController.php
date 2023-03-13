@@ -15,6 +15,8 @@ use App\Models\SmsMailAttendee;
 use App\Models\SmsTenant;
 use App\Http\Traits\ReplacePlaceholderTrait;
 use App\Models\SmsMailScheduler;
+use App\Models\SmsMailTemplateCategory;
+use Illuminate\Support\Facades\Log;
 
 class SmsMailController extends MasterController
 {
@@ -22,6 +24,7 @@ class SmsMailController extends MasterController
 
     public function index()
     {
+        //dd($datas = SmsMail::with('category')->orderBy("start_date","desc")->get());
         return $this->callFunction(null,'layouts.administrator.sms-mail.index');
     }
 
@@ -29,41 +32,42 @@ class SmsMailController extends MasterController
 
     public function data()
     {
-        // $datas = MaintenanceSchedule::orderBy("start_date_time","asc");
+        $datas = SmsMail::withCount(['affected_tenants','schedule_reminders'])->orderBy("start_date","desc");
 
-        // return DataTables::of($datas)
-        // // ->editColumn('name', function ($umkmProduct) {
-        // //     return '<a href="' .
-        // //         ($umkmProduct->url_image != null ? $umkmProduct->url_image :  "/storage/image/static/empty.png") .
-        // //         '" target="_blank"><img alt="image" class="table-avatar align-middle rounded" width="30px" height="30px" src="' .
-        // //         ($umkmProduct->url_image != null ? $umkmProduct->url_image :  "/storage/image/static/empty.png") .
-        // //         '"></a>' .
-        // //         ' ' .
-        // //         $umkmProduct->name;
-        // // })
-        // ->editColumn('action', function ($maintenanceSchedule) {
-        //     $show =
-        //         '<a href="' .
-        //         route('administrator.maintenance-schedule.show', $maintenanceSchedule->id) .
-        //         '" class="btn btn-info btn-flat btn-xs" title="Show"><i class="fa fa-eye fa-sm"></i></a>';
-        //     $edit =
-        //         '<a href="' .
-        //         route('administrator.maintenance-schedule.edit', $maintenanceSchedule->id) .
-        //         '" class="btn btn-warning btn-flat btn-xs" title="Edit"><i class="fa fa-pencil-alt fa-sm"></i></a>';
+        //Log::debug($datas);
+        return DataTables::of($datas)
+        ->editColumn('name', function ($data) {
+            return $data->category->name.' - '.$data->template->name ;
+        })
+        ->editColumn('affected_tenant', function ($data) {
+            return $data->affected_tenants_count.' Tenant';
+        })
+        ->editColumn('schedule_reminder', function ($data) {
+            return $data->schedule_reminders_count.' Pengingat';
+        })
+        ->editColumn('action', function ($data) {
+            $show =
+                '<a href="' .
+                route('administrator.sms-mail.show', $data->id) .
+                '" class="btn btn-info btn-flat btn-xs" title="Show"><i class="fa fa-eye fa-sm"></i></a>';
+            $edit =
+                '<a href="' .
+                route('administrator.sms-mail.edit', $data->id) .
+                '" class="btn btn-warning btn-flat btn-xs" title="Edit"><i class="fa fa-pencil-alt fa-sm"></i></a>';
 
-        //     $delete =
-        //         '<a href="#" data-href="'.
-        //         route('administrator.maintenance-schedule.destroy', $maintenanceSchedule->id) .
-        //         '" class="btn btn-danger btn-flat btn-xs"
-        //         title="Delete" data-toggle="modal"
-        //         data-text="Apakah anda yakin untuk menghapus umkm '.$maintenanceSchedule->name.'"
-        //         data-target="#modal-confirmation-delete" data-value="'.$maintenanceSchedule->id.'">
-        //         <i class="fa fa-trash"></i>
-        //         </a>';
-        //     return $show.$edit.$delete;
-        // })
-        // ->rawColumns(['name','action'])
-        // ->make(true);
+            $delete =
+                '<a href="#" data-href="'.
+                route('administrator.sms-mail.destroy', $data->id) .
+                '" class="btn btn-danger btn-flat btn-xs"
+                title="Delete" data-toggle="modal"
+                data-text="Apakah anda yakin untuk menghapus Mail '.$data->name.'"
+                data-target="#modal-confirmation-delete" data-value="'.$data->id.'">
+                <i class="fa fa-trash"></i>
+                </a>';
+            return $show.$edit.$delete;
+        })
+        ->rawColumns(['name','action'])
+        ->make(true);
     }
 
     public function create()
@@ -80,12 +84,11 @@ class SmsMailController extends MasterController
     {
 
         $func = function () use ($request){
-
             $smsMail = SmsMail::create([
                 'id' => Str::uuid(),
                 'start_date' => Carbon::parse($request->mail_template_hashtag['start_date'].' '.$request->mail_template_hashtag['start_time']),
                 'end_date' => Carbon::parse(($request->mail_template_hashtag['end_date'] ?? $request->mail_template_hashtag['start_date']).' '.($request->mail_template_hashtag['end_time'] ?? $request->mail_template_hashtag['start_time'])),
-                'sms_mail_template_categories_id' => $request->category_mail,
+                'sms_mail_template_categories_id' => SmsMailTemplateCategory::where('sms_mail_category_id',$request->category_mail)->where('sms_mail_template_id',$request->template_mail)->first()->id,
             ]);
 
             // Get selected tenants
