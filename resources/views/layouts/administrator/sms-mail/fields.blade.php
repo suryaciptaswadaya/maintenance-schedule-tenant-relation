@@ -178,7 +178,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Deskripsi</label>
-                                <textarea id="template-content" name="mail_description" class="form-control tinymce-editor" placeholder="Deskripsi ..."
+                                <textarea id="template-content" name="mail_content" class="form-control tinymce-editor" placeholder="Deskripsi ..."
                                     rows="2"></textarea>
                                 <textarea id="template-content-hidden" hidden></textarea>
 

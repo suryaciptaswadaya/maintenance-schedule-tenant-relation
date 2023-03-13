@@ -17,14 +17,15 @@ return new class extends Migration
             $table->id();
             $table->char('sms_mail_id',36)->index();
             $table->string('sms_tenant_id')->index();
-            $table->unsignedBigInteger('sms_mail_scheduler_id')->index();
+            //$table->unsignedBigInteger('sms_mail_scheduler_id')->index();
+            $table->title('mail_subject');
             $table->text('mail_content');
             $table->boolean('is_send')->default(0);
             $table->timestamps();
 
             $table->foreign('sms_mail_id')->references('id')->on('sms_mails')->onDelete('cascade');
             $table->foreign('sms_tenant_id')->references('id')->on('sms_tenants')->onDelete('cascade');
-            $table->foreign('sms_mail_scheduler_id')->references('id')->on('sms_mail_schedulers')->onDelete('cascade');
+            //$table->foreign('sms_mail_scheduler_id')->references('id')->on('sms_mail_schedulers')->onDelete('cascade');
 
 
         });

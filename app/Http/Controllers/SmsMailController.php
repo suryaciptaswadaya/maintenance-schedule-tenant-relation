@@ -10,14 +10,22 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use DB,DataTables;
+use App\Http\Controllers\MasterController;
+use App\Models\SmsMailAttendee;
+use App\Models\SmsTenant;
+use App\Http\Traits\ReplacePlaceholderTrait;
+use App\Models\SmsMailScheduler;
 
-class SmsMailController extends Controller
+class SmsMailController extends MasterController
 {
+    use ReplacePlaceholderTrait;
+
     public function index()
     {
-        return view('layouts.administrator.sms-mail.index');
-
+        return $this->callFunction(null,'layouts.administrator.sms-mail.index');
     }
+
+
 
     public function data()
     {
@@ -70,6 +78,58 @@ class SmsMailController extends Controller
 
     public function store(Request $request)
     {
+
+        $func = function () use ($request){
+
+            $smsMail = SmsMail::create([
+                'id' => Str::uuid(),
+                'start_date' => Carbon::parse($request->mail_template_hashtag['start_date'].' '.$request->mail_template_hashtag['start_time']),
+                'end_date' => Carbon::parse(($request->mail_template_hashtag['end_date'] ?? $request->mail_template_hashtag['start_date']).' '.($request->mail_template_hashtag['end_time'] ?? $request->mail_template_hashtag['start_time'])),
+                'sms_mail_template_categories_id' => $request->category_mail,
+            ]);
+
+            // Get selected tenants
+            $smsTenants = SmsTenant::select('id', 'tenant_access_company_id', 'name')
+            ->whereIn('id', $request->tenant)
+            ->get();
+
+            // Get template title and content
+            $templateTitle = $request->mail_title;
+            $templateContent = $request->mail_content;
+
+            // Extract placeholders from title
+            preg_match_all("/\[(.*?)\]/", $templateTitle, $getPlaceholders);
+            $placeholders = $getPlaceholders[0];
+
+            // Replace placeholders in title
+            foreach ($smsTenants as $smsTenant) {
+                $tenantName = $smsTenant->name;
+                $mailDate =  $request->mail_template_hashtag['start_date'] ?? "";
+
+                $mailTitle = $this->replaceKeyWithValue($placeholders, $templateTitle, $tenantName, $mailDate);
+                $mailContent = $this->replaceKeyWithValue($placeholders, $templateContent, $tenantName);
+
+                $smsMailAttendee = SmsMailAttendee::create([
+                    'sms_mail_id' => $smsMail->id,
+                    'sms_tenant_id'=>$smsTenant->id,
+                    'mail_title' => $mailTitle,
+                    'mail_content'=> $mailContent,
+                ]);
+            }
+
+            // / foreach ($request->input('request_surcharge', []) as $i => $priceSurcharge) {
+
+            foreach ($request->input('scheduler_date_time', []) as $i => $scheduler) {
+
+                $smsMailScheduler = SmsMailScheduler::create([
+                    'sms_mail_id' => $smsMail->id,
+                    'send_date' =>  Carbon::parse($scheduler)
+                ]);
+
+            };
+        };
+
+        return $this->callFunction($func,'layouts.administrator.sms-mail.index');
 
     }
 

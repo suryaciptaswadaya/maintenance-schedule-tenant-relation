@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class SmsMailScheduler extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'sms_mail_id',
+        'send_date',
+    ];
 }

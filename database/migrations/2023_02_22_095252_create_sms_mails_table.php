@@ -18,9 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('sms_mail_template_categories_id')->index();
            // $table->unsignedBigInteger('sms_category_id')->index();
             //$table->unsignedBigInteger('sms_template_email_id ')->index();
-            $table->string('subject');
+            //$table->string('subject');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->boolean('is_online_meeting')->default(0);
-            $table->boolean('is_required')->default(0);
+            $table->boolean('is_required')->default(1);
             $table->timestamps();
             $table->softDeletes();
 
