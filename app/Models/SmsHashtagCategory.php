@@ -14,6 +14,6 @@ class SmsHashtagCategory extends Model
 
     public function scopeWithoutHrgaInformation($query)
     {
-        return $query->where('name','!=','hrga_information');
+        return $query->whereNotIn('name',['hrga_information','representative']);
     }
 }

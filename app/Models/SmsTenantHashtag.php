@@ -9,7 +9,8 @@ class SmsTenantHashtag extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = null;
+    public $timestamps = false;
+    //protected $primaryKey = null;
     protected $keyType = 'string';
 
 }

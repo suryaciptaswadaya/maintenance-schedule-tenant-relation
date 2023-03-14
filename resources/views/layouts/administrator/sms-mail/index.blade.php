@@ -80,6 +80,8 @@
                     { title: "{{ __('Mail') }}", data: 'name', name: 'name', defaultContent: '-', class: 'text-center', orderable: false },
                     { title: "{{ __('Tenant Terdampak') }}", data: 'affected_tenant', name: 'affected_tenant', defaultContent: '-', class: 'text-center', orderable: false },
                     { title: "{{ __('Jumlah Pengingat') }}", data: 'schedule_reminder', name: 'schedule_reminder', defaultContent: '-', class: 'text-center', orderable: false },
+                    { title: "{{ __('Tgl. Mulai') }}", data: 'start_date', name: 'start_date', defaultContent: '-', class: 'text-center', orderable: false },
+                    { title: "{{ __('Tgl. Selesai') }}", data: 'end_date', name: 'end_date', defaultContent: '-', class: 'text-center', orderable: false },
                     { title: "{{ __('Action') }}", data: 'action', name: 'action', defaultContent: ' - ', class: 'text-center',searchable:false, orderable: false },
                 ]
             });

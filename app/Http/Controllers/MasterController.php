@@ -25,7 +25,14 @@ class MasterController extends Controller
         $this->code = 200;
     }
 
-    public function callFunction($func, $view = null)
+    /**
+    *Calls a given function and handles exceptions and transactions.
+    *@param callable $func The function to call.
+    *@param string|null $view The view to render if the request is made from a web page.
+    *@param string|null $redirect The URL to redirect to if the request is a redirection.
+    *@return \Illuminate\Http\Response|\Illuminate\View\View|\Illuminate\Http\RedirectResponse The response object or the rendered view.
+    */
+    public function callFunction($func, $view = null, $redirect = null)
     {
         if ($func) {
             DB::beginTransaction();
@@ -62,6 +69,13 @@ class MasterController extends Controller
 
         if ($view) {
             return view($view, [
+                "data" => $this->data,
+                "messages" => $this->messages,
+                "error" => $this->error,
+                "code" => $this->code
+            ]);
+        } elseif ($redirect) {
+            return redirect()->route($redirect)->with([
                 "data" => $this->data,
                 "messages" => $this->messages,
                 "error" => $this->error,

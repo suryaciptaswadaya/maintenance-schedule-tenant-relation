@@ -14,8 +14,10 @@ use App\Http\Controllers\MasterController;
 use App\Models\SmsMailAttendee;
 use App\Models\SmsTenant;
 use App\Http\Traits\ReplacePlaceholderTrait;
+use App\Models\SmsHashtag;
 use App\Models\SmsMailScheduler;
 use App\Models\SmsMailTemplateCategory;
+use App\Models\SmsTenantHashtag;
 use Illuminate\Support\Facades\Log;
 
 class SmsMailController extends MasterController
@@ -24,11 +26,8 @@ class SmsMailController extends MasterController
 
     public function index()
     {
-        //dd($datas = SmsMail::with('category')->orderBy("start_date","desc")->get());
-        return $this->callFunction(null,'layouts.administrator.sms-mail.index');
+        return view('layouts.administrator.sms-mail.index');
     }
-
-
 
     public function data()
     {
@@ -44,6 +43,12 @@ class SmsMailController extends MasterController
         })
         ->editColumn('schedule_reminder', function ($data) {
             return $data->schedule_reminders_count.' Pengingat';
+        })
+        ->editColumn('start_date', function ($data) {
+            return Carbon::parse($data->start_date)->translatedFormat("D, d M Y H:i");
+        })
+        ->editColumn('end_date', function ($data) {
+            return Carbon::parse($data->end_date)->translatedFormat("D, d M Y H:i");
         })
         ->editColumn('action', function ($data) {
             $show =
@@ -132,7 +137,7 @@ class SmsMailController extends MasterController
             };
         };
 
-        return $this->callFunction($func,'layouts.administrator.sms-mail.index');
+        return $this->callFunction($func,null,'administrator.sms-mail.index');
 
     }
 
@@ -189,5 +194,49 @@ class SmsMailController extends MasterController
         }
 
         return ('success');
+    }
+
+    private function replaceRandomEmail()
+    {
+        $datas = SmsMail::whereId('340c1e8b-aaf4-4446-ad35-48f54190bf28')->with(['category','template','affected_tenants'])->withCount(['affected_tenants','schedule_reminders'])->orderBy("start_date","desc")->first();
+        $tenantId = [];
+        foreach ($datas->affected_tenants as $affectedTenant) {
+            $tenantId[] = $affectedTenant->sms_tenant_id;
+        }
+
+        $tenants = SmsTenant::get();
+
+        foreach ($tenants as $tenant) {
+
+            foreach ($tenant->informations as $emailInformation) {
+                // Convert the JSON string to an array
+                $array = json_decode($emailInformation->name,true);
+
+                // Remove whitespace from each string in the array
+                $array = array_map(function ($key, $value) {
+                    return ['email_' . ($key + 1) => $value];
+                }, array_keys($array), $array);
+
+                // Remove empty elements from the array
+
+
+                // Output the cleaned array
+                //print_r($array);
+
+                $newArr = [];
+                foreach ($array as $item) {
+                    $newArr = array_merge($newArr, $item);
+                }
+
+                $newArr = array_map('trim', $newArr);
+                $newArr = array_filter($newArr);
+
+                //dd();
+                $smsHashtagEmail = SmsHashtag::whereId($emailInformation->id)->first();
+                $smsHashtagEmail->name = json_encode($newArr);
+                $smsHashtagEmail->save();
+
+            }
+        }
     }
 }

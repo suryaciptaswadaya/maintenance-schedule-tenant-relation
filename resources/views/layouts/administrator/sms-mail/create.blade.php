@@ -62,13 +62,13 @@
                 var currentStep = nextStep
 
                 var checkboxesTenant = document.querySelectorAll('.tenant');
-
                 var informationTemplate = document.querySelectorAll('.information-template');
+                var schedulerTemplate = document.querySelectorAll('.scheduler-template');
+
 
                 var checkedTenant = false;
                 var checkedInformation = false;
-
-
+                var checkedScheduler = false;
 
                 for (var i = 0; i < checkboxesTenant.length; i++) {
                     if (checkboxesTenant[i].checked) {
@@ -80,6 +80,13 @@
                 for (let i = 0; i < informationTemplate.length; i++) {
                     if (informationTemplate[i].value) {
                         checkedInformation = true;
+                        break;
+                    }
+                }
+
+                for (let i = 0; i < schedulerTemplate.length; i++) {
+                    if (schedulerTemplate[i].value) {
+                        checkedScheduler = true;
                         break;
                     }
                 }
@@ -100,6 +107,9 @@
                     (stepperPan.getAttribute('id') === 'tenant-part' && !checkedTenant)
                     ||
                     (stepperPan.getAttribute('id') === 'information-part' && !checkedInformation)
+                    ||
+                    (stepperPan.getAttribute('id') === 'scheduler-part' && !checkedScheduler)
+
                 ) {
 
                     event.preventDefault()
@@ -551,7 +561,7 @@
                         form.onsubmit = () => false;
                     }
                     // If the button clicked is a "next" button
-                    else if (button.classList.contains('btn-next-form')) {
+                    else if (button.classList.contains('btn-next-form') ) {
                         // Check if the button is the last one
                         const isLastButton = button.classList.contains('btn-next-last-form');
                         // Enable or disable the submit button depending on whether it's the last button or not, and toggle the "disabled" class accordingly
@@ -575,7 +585,7 @@
                 const template = $('#scheduler');
                 var clone = template.clone().removeAttr('id').removeClass('d-none');
                 $('.input-scheduler', clone).attr('name', 'scheduler_date_time[]').attr('id',
-                    'scheduler-date-time-' + countSchedulerDateTime).addClass('date-time-picker');
+                    'scheduler-date-time-' + countSchedulerDateTime).addClass('date-time-picker scheduler-template');
                 $('.btn-remove-scheduler', clone).click(function() {
                     $(this).closest('div.scheduler').remove();
                 });

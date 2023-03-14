@@ -200,7 +200,7 @@
                         <div class="form-group col-sm-10">
                             <label>Tanggal & Waktu Penjadwalan</label>
                             <br />
-                            <input id="scheduler-date-time-0" name="scheduler_date_time[]" class="form-control date-time-picker">
+                            <input id="scheduler-date-time-0" name="scheduler_date_time[]" class="form-control date-time-picker scheduler-template">
                         </div>
 
                         <div class="form-group col-sm-2">
